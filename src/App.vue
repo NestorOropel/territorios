@@ -1,13 +1,16 @@
 <template>
   <div>
-    <div class="flex">
+    <div>
       <PageStart v-if="route.page == 'start'"/>
-      <div v-else>
-        <div class="menu flex-none flex">
+      <div v-else  class="flex">
+        <div class="menu flex-none flex h-screen">
           <Menu />
         </div>
         <div class="flex-1 flex">
-          <EditorTarjeta />
+          
+          <EditorTarjeta v-if="route.page == 'formTerritorio'" />
+          <DownloadTerritorio v-if="route.page == 'downloadTerritorio'" />
+          <ListaTerritorios v-if="route.page == 'listaTerritorio'" />
         </div>
       </div>
     </div>

@@ -21,5 +21,8 @@ export const useTerritoriosStore = defineStore('territorios', {
     setActive(id) {
       this.activeId = id;
     },
+    addTerritorio(data){
+      this.list = [...this.list, data]
+    }
   },
 })

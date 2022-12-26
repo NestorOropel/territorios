@@ -159,17 +159,17 @@
 
                   <h4>¡Importante! Mueve el mapa para que todo quede centrado.</h4>
 
-                  <h4 class="text-green-700 font-light">¡Si ya terminaste todos los pasos presiona <b>Guardar</b>!</h4>
+                  <h4 class="text-green-700 font-light">¡Si ya terminaste todos los pasos presiona <b>Agregar</b>!</h4>
                  
                 </div>
 
                 <div class="flex justify-content-between">
                   <Button label="Atras" class="p-button-outlined" @click="step = 2" />
 
-                  <Button label="Guardar" class="p-button-outlined" @click="step = 4" />
+                  <Button label="Agregar" class="p-button-outlined" @click="agregar()" />
                 </div>
               </div>
-              <div class="" v-show="step == 4">
+              <!-- <div class="" v-show="step == 4">
                 <h2>4</h2>
                 <Button
                   label="Guardar Territorio"
@@ -177,7 +177,7 @@
                   @click="configureMap()"
                 />
                 <p>Guarda cambios</p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -217,7 +217,7 @@ import { useTerritorioStore } from "@/store/territorio";
 import { useMapStore } from "@/store/map";
 import { useMzNumbers } from "@/store/map/mzNumber";
 
-const terrList = useTerritoriosStore();
+const territorios = useTerritoriosStore();
 const terr = useTerritorioStore();
 const m = useMapStore();
 
@@ -244,6 +244,11 @@ const onMapClick = (e) => {
   if (step.value == 2) configureMzNumber(e);
 };
 
+const agregar = () => {
+  console.log("territorios", territorios)
+  territorios.addTerritorio(terr.getData())
+  terr.clear()
+}
 const configureLimit = (data) => {
   if (polTerr) m.map.removeLayer(polTerr);
   if (data) terr.addLimit([data.latlng.lat, data.latlng.lng]);
