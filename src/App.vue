@@ -1,32 +1,35 @@
 <template>
   <div>
     <div class="flex">
-
-      <div class="menu flex-none flex">
-        <Menu />
-      </div>
-      <div class="flex-1 flex">
-        <EditorTarjeta />
+      <PageStart v-if="route.page == 'start'"/>
+      <div v-else>
+        <div class="menu flex-none flex">
+          <Menu />
+        </div>
+        <div class="flex-1 flex">
+          <EditorTarjeta />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-// import EditorTarjeta from '@/page/tarjeta/EditorTarjeta.vue'
+<script setup>
+import { useRouterStore } from '@/store/router'
+const route = useRouterStore()
 
-export default {
-  name: 'App',
-
-}
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap');
 body {
   margin: 0;
 }
+* {
+  font-family: 'Roboto', sans-serif;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

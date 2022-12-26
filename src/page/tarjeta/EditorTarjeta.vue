@@ -4,13 +4,13 @@
       <div class="col col-6 pb-0 pl-4">
         <div class="flex flex-column h-full">
           <div>
-            <TarjetaTerritorio v-show="step == 0" />
-            <h1 v-show="step > 0" class="text-left mb-0">
-              Territorio {{ terr.zona }}{{ terr.numero }}
+            
+            <h1 class="text-left mb-0">
+              Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
             </h1>
           </div>
           <div>
-            <h5 class="text-left font-light">Instrucciones</h5>
+            <h5 class="text-left  text-red-700">Instrucciones</h5>
             <div class="text-left">
               <div v-show="step == 0">
                 <div class="mb-5 line-height-3">
@@ -19,18 +19,28 @@
                     Escribe en Zona una letra (A - Z) y en Numero el numero del territorio
                     dentro de esa Zona.
                   </p>
+                  <p>
+                    <b>Numero</b> es lo que normalmente usas como numero de territorio. El sistema te permite agregar del numero 1 al 99.
+                  </p>
 
                   <p>
-                    Las zonas te sirven para dividir territorios grandes en porciones mas
-                    pequeñas; pueden estar asociadas a puntos cardinales o grupo de la
-                    congregación.
+                    <b>Zona</b> es una letra, debes usarla si tienes mas de 99 territorios o si quieres dividir todo el territorio de la congregación en varias partes. Los territorios entonces serian por ejemplo: N1, N2, S1, S2, etc.
+                  </p>
+                  <p>
+                    Las zonas pueden estar asociadas a puntos cardinales (N, S, E, O) o grupo de la
+                    congregación o lo que tu decidas.
                   </p>
                   <p>Si ya completaste los campos Zona y Numero presiona Continuar.</p>
                 </div>
+                <TarjetaTerritorio v-show="step == 0" />
 
                 <div class="flex justify-content-end">
-                  <Button label="Continuar" class="p-button-outlined" @click="step = 1" />
+                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.numero || terr.numero < 1" @click="step = 1" />
                 </div>
+                <div class="msg text-red-500 mt-3 text-sm" v-show="!terr.numero || terr.numero < 1">
+                  <b>Importante:</b> El boton continuar se habilitara cuando cumplas con lo minimo requerido en las instrucciones de una manera aceptable. <b>Presta atencion a las instrucciones</b>
+                </div>
+                
               </div>
               <div v-show="step == 1">
                 <div class="mb-5 line-height-3">
@@ -59,7 +69,10 @@
                     class="p-button-outlined"
                     @click="clearLimits()"
                   />
-                  <Button label="Continuar" class="p-button-outlined" @click="step = 2" />
+                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="terr.limits.length < 3" @click="step = 2" />
+                </div>
+                <div class="msg text-red-500 mt-3 text-sm" v-show="terr.limits.length < 3">
+                  <b>Importante:</b> El boton continuar se habilitara cuando cumplas con lo minimo requerido en las instrucciones de una manera aceptable. <b>Presta atencion a las instrucciones</b>
                 </div>
               </div>
               <div v-show="step == 2">
@@ -92,78 +105,68 @@
                     class="p-button-outlined"
                     @click="clearMzNumbers()"
                   />
-                  <Button label="Continuar" class="p-button-outlined" @click="step = 3" />
+                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="terr.mzNumbers.length < 1" @click="step = 3" />
+                </div>
+
+                <div class="msg text-red-500 mt-3 text-sm" v-show="terr.mzNumbers.length < 1">
+                  <b>Importante:</b> El boton continuar se habilitara cuando cumplas con lo minimo requerido en las instrucciones de una manera aceptable. <b>Presta atencion a las instrucciones</b>
                 </div>
               </div>
               <div v-show="step == 3">
                 <div class="mb-5 line-height-3">
                   <h3>4. Definir diseño de mapa para {{ terr.zona }}{{ terr.numero }}</h3>
                   <p>¡Ya casi terminamos!</p>
-                  <p>
-                    A. Elige que tipo de diseño se adapta mas al tamaño del territorio
-                    {{ terr.zona }}{{ terr.numero }}.
-                  </p>
+                  <div class="msg text-red-500 text-sm" >
+                    <b>Recuerda leer atentamente las instrucciones.</b>
+                  </div>
+                  <h4>
+                    Elige que <b>forma</b> se adapta mas al territorio {{ terr.zona }}{{ terr.numero }}.
+                  </h4>
                   <div
                     class="flex justify-content-between align-items-center"
                     style="max-width: 300px"
                   >
-                    <div>
+                    <div @click="terr.$patch({ shape: 3 })">
                       <svg width="50" height="100">
-                        <rect
-                          x="0"
-                          y="0"
-                          width="50"
-                          height="100"
-                          fill="white"
-                          stroke="black"
-                        />
+                        <rect x="0" y="0" width="50" height="100" fill="white" stroke="black" />
                       </svg>
                     </div>
-                    <div>
+                    <div @click="terr.$patch({ shape: 1 })">
                       <svg width="100" height="50">
-                        <rect
-                          x="0"
-                          y="0"
-                          width="100"
-                          height="50"
-                          fill="white"
-                          stroke="black"
-                        />
+                        <rect x="0" y="0" width="100" height="50" fill="white" stroke="black" />
                       </svg>
                     </div>
-                    <div>
+                    <div @click="terr.$patch({ shape: 2 })">
                       <svg width="100" height="100">
-                        <rect
-                          x="0"
-                          y="0"
-                          width="100"
-                          height="100"
-                          fill="white"
-                          stroke="black"
-                        />
+                        <rect x="0" y="0" width="100" height="100" fill="white" stroke="black" />
                       </svg>
                     </div>
                   </div>
-                  <p>
-                    Si te equivocas a quieres volver a enumerar solo preciona el boton
-                    "Limpiar Mapa".
-                  </p>
-                  <p>Si ya concluiste de enumerar solo preciona continuar.</p>
-                  <p class="text-xs">
-                    Nota: Esto se utilizara para que te digan que manzanas del territorio
-                    se predicaron, por lo tanto, no deberias enumerar espacios verdes o
-                    lugares donde no hay personas a las que predicar.
-                  </p>
+
+                  <h4>Rota el mapa para que se aproveche el espacio </h4>
+                  <div class="w-50">
+                    <h5>Rotacion: {{ terr.angle }}</h5>
+                    <Slider v-model="terr.angle" :min="-50" :max="50" />
+                    <p class="text-xs">Mueve el punto para rotar</p>
+                  </div>
+
+                  <h4>Asigna el zoom al mapa </h4>
+                  <div class="w-50">
+                    <h5>Zoom: {{ terr.zoom }}</h5>
+                    <Slider v-model="terr.zoom" :step=".25" :min="14" :max="19" />
+                    <p class="text-xs">Mueve el punto para hacer zoom</p>
+                  </div>
+
+                  <h4>¡Importante! Mueve el mapa para que todo quede centrado.</h4>
+
+                  <h4 class="text-green-700 font-light">¡Si ya terminaste todos los pasos presiona <b>Guardar</b>!</h4>
+                 
                 </div>
 
                 <div class="flex justify-content-between">
                   <Button label="Atras" class="p-button-outlined" @click="step = 2" />
-                  <Button
-                    label="Limpiar Mapa"
-                    class="p-button-outlined"
-                    @click="clearMzNumbers()"
-                  />
-                  <Button label="Continuar" class="p-button-outlined" @click="step = 4" />
+
+                  <Button label="Guardar" class="p-button-outlined" @click="step = 4" />
                 </div>
               </div>
               <div class="" v-show="step == 4">
@@ -181,15 +184,27 @@
       </div>
       <div class="col col-6 pb-0">
         <MapaBase
-          v-if="step != 2"
+          v-if="step != 3"
           class="map"
-          :center="center"
+          :center="terr.center"
           @mapClick="onMapClick"
           @mapMoveend="onMapMoveend"
           @zoomstart="zoomstart"
           @zoomend="zoomend"
           @ready="ready"
         ></MapaBase>
+        <MapaTerritorio
+          v-if="step == 3"
+          class="map"
+          :center="terr.center"
+          :shape="terr.shape"
+          :rotate="terr.angle"
+          :zoom="terr.zoom"
+          :mzNumbers="terr.mzNumbers"
+          listen="true"
+          :limits="terr.limits"
+          @ready="ready"
+        ></MapaTerritorio>
       </div>
     </div>
   </div>
@@ -208,13 +223,10 @@ const m = useMapStore();
 
 const mzNumbers = useMzNumbers();
 
-const center = ref([-31.5653073, -68.5638051]);
-const setCenter = () => {
-  terr.center = m.getCenter();
-};
+const angle = ref(0)
 
 var polTerr;
-const step = ref(3);
+const step = ref(0);
 const clearLimits = () => {
   // terr.limits.value = []
   terr.$patch({ limits: [] });
@@ -235,7 +247,7 @@ const onMapClick = (e) => {
 const configureLimit = (data) => {
   if (polTerr) m.map.removeLayer(polTerr);
   if (data) terr.addLimit([data.latlng.lat, data.latlng.lng]);
-  polTerr = m.L.polyline([...terr.limits, terr.limits[0]], m.sectorOption).addTo(m.map);
+  if (terr.limits.length > 0) polTerr = m.L.polyline([...terr.limits, terr.limits[0]], m.sectorOption).addTo(m.map);
 };
 
 const configureMzNumber = (data) => {
@@ -256,30 +268,13 @@ const ready = () => {
   configureLimit();
 };
 
-terrList.setActive(1);
-const configureMap = () => {
-  let data = [
-    {
-      type: "Feature",
-      properties: { party: "Republican" },
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [-104.05, 48.99],
-            [-97.22, 48.98],
-            [-96.58, 45.94],
-            [-104.03, 45.94],
-            [-104.05, 48.99],
-          ],
-        ],
-      },
-    },
-  ];
-  m.L.geoJson(data, {
-    invert: true,
-  }).addTo(m.map);
-};
+window.addEventListener('storage',function(e){
+   if(e.storageArea===sessionStorage && e.key == 'center'){
+    //  console.log('change', e.newValue);
+     terr.$patch({ center: JSON.parse(e.newValue) });
+   } 
+   // else, event is caused by an update to localStorage, ignore it
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -287,10 +282,10 @@ const configureMap = () => {
 .max-page {
   min-height: 90vh;
 }
-. p {
+/* p {
   color: grey;
   font-size: 0.8em;
-}
+} */
 .stepActive {
   /* border-top: 1px solid red; */
   background-color: aliceblue;

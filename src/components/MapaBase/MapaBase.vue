@@ -27,7 +27,6 @@ onMounted(() =>{
     emit("mapClick", e)
   });
   m.map.on("moveend", function (e) {
-    
     emit("mapMoveend", e)
   });
   m.map.on("zoomstart", function (e) {

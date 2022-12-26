@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+      <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""></script>
+
+    <!-- Load leaflet.snogylop -->
+    <script src="./js/leaflet.snogylop.js"></script>
+    <script src="./js/iconsNumbers.js"></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+      <div >
+
+        <div id="map"></div>
+      </div>
+    
+    
+    <script>
+      //height
+      let h = document.documentElement.clientHeight;
+      document.getElementById("map").style.height = h + "px"
+
+      //query
+      const params = Object.fromEntries(  
+        new URLSearchParams(window.location.search)
+      )
+
+
+      // console.log("params", params)
+
+      let { center, limits, zoom, listen, mzNumbers } = params;
+      center = JSON.parse('['+center+']');
+      limits = JSON.parse(limits)
+      limits = [...limits, limits[0]]
+      mzNumbers = JSON.parse(mzNumbers)
+
+      var map;
+      var map = L.map('map', { zoomControl: false, scrollWheelZoom: false, zoomSnap: 0.25, }).setView(center, zoom);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      L.polyline(limits, {
+        color: 'red',
+        weight: 3,
+        opacity: 0.5,
+        smoothFactor: 1
+      }).addTo(map);
+
+      if (listen == 'true') {
+        map.on("moveend", function (e) {
+          let center = map.getCenter()          
+          sessionStorage.setItem('center', JSON.stringify([center.lat, center.lng]))
+        });
+      }
+
+      if (Array.isArray(mzNumbers)) {
+        for (let i in mzNumbers) {
+          L.marker(mzNumbers[i][0], { icon: nIcons[mzNumbers[i][1]]}).addTo(map);
+          // numbers.push(mark)
+        }
+      }
+    </script>
+  </body>
+</html>
