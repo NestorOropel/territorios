@@ -14,12 +14,12 @@
     <div class="flex flex-column justify-content-between align-content-between h-full">
       <div class="flex flex-column buttonspace">
 
-        <Button icon="pi pi-th-large" @click="visibleLeft = true" />
-        <Button icon="pi pi-plus" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'formTerritorio'})" />
-        <Button icon="pi pi-list" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
+        <!-- <Button icon="pi pi-th-large" @click="visibleLeft = true" /> -->
+        <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'formTerritorio'})" />
+        <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
       </div>
 
-      <Button icon="pi pi-download" class="p-button-danger" alt="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+      <Button icon="pi pi-download" class="p-button-danger" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
     </div>
     
     

@@ -5,9 +5,10 @@
         <div class="flex flex-column h-full">
           <div>
             
-            <h1 class="text-left mb-0">
+            <h1 class="text-left  font-light">
               Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
             </h1>
+            <TarjetaTerritorio v-show="step < 3" />
           </div>
           <div>
             <h5 class="text-left  text-red-700">Instrucciones</h5>
@@ -30,9 +31,11 @@
                     Las zonas pueden estar asociadas a puntos cardinales (N, S, E, O) o grupo de la
                     congregación o lo que tu decidas.
                   </p>
-                  <p>Si ya completaste los campos Zona y Numero presiona Continuar.</p>
+                  <p>Si ya completaste los campos Zona y Numero presiona <b>Continuar</b>.</p>
+                  <p>Tambien puedes escribir un nombre de <b>Referencia</b> y <b>Notas</b>, datos que tambien son opcionales</p>
+
                 </div>
-                <TarjetaTerritorio v-show="step == 0" />
+                <!-- <TarjetaTerritorio v-show="step == 0" /> -->
 
                 <div class="flex justify-content-end">
                   <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.numero || terr.numero < 1" @click="step = 1" />
@@ -159,14 +162,14 @@
 
                   <h4>¡Importante! Mueve el mapa para que todo quede centrado.</h4>
 
-                  <h4 class="text-green-700 font-light">¡Si ya terminaste todos los pasos presiona <b>Agregar</b>!</h4>
+                  <h4 class="text-green-700 font-light">¡Si ya terminaste todos los pasos presiona <b>Guardar Cambios</b>!</h4>
                  
                 </div>
 
                 <div class="flex justify-content-between">
                   <Button label="Atras" class="p-button-outlined" @click="step = 2" />
 
-                  <Button label="Agregar" class="p-button-outlined" @click="agregar()" />
+                  <Button label="Guardar Cambios" class="p-button-outlined" @click="guardar()" />
                 </div>
               </div>
               <!-- <div class="" v-show="step == 4">
@@ -244,10 +247,12 @@ const onMapClick = (e) => {
   if (step.value == 2) configureMzNumber(e);
 };
 
-const agregar = () => {
-  console.log("territorios", territorios)
-  territorios.addTerritorio(terr.getData())
-  terr.clear()
+const guardar = () => {
+  // console.log("territorios", territorios)
+  territorios.update(terr.getData())
+  
+  terr.$reset()
+  step.value = 0;
 }
 const configureLimit = (data) => {
   if (polTerr) m.map.removeLayer(polTerr);

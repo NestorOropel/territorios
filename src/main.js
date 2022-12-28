@@ -1,6 +1,7 @@
 import App from './App.vue'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { resetStore } from '@/store/plugins/reset-store'
 
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/saga-blue/theme.css';
@@ -16,7 +17,7 @@ import InputNumber from 'primevue/inputnumber';
 import Sidebar from 'primevue/sidebar';
 import Button from 'primevue/button';
 import Slider from 'primevue/slider';
-
+import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 
 // componentes creados
@@ -31,6 +32,7 @@ import PageStart from '@/page/PageStart.vue'
 
 
 const pinia = createPinia()
+pinia.use(resetStore)
 const app = createApp(App);
 
 app
@@ -41,6 +43,7 @@ app
 .component('Button', Button)
 .component('Sidebar', Sidebar)
 .component('Slider', Slider)
+.component('Textarea', Textarea)
 .component('FileUpload', FileUpload)
 .component('Menu', Menu)
 .component('PageStart', PageStart)

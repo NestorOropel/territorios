@@ -28,12 +28,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useTerritoriosStore } from '@/store/territorios'
-// import { ref } from 'vue'
 const territorios = useTerritoriosStore()
 
 const downloadFile = () => {
   //create or obtain the file's content
-  let data = territorios.list
+  let data = {
+    version: 1,
+    territorios: territorios.list
+  }
   console.log("data", data)
   var content = JSON.stringify(data);
   //create a file and put the content, name and type

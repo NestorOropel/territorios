@@ -1,28 +1,35 @@
 // stores/counter.js
 import { defineStore } from 'pinia'
+import { ref, reactive } from "vue";
+import uuid from './mix/uuid'
 
-export const useTerritoriosStore = defineStore('territorios', {
-  state: () => ({
-    list: [
-      {
-        id: 1,
-        zone: "A",
-        numero: 1,
-      }
-    ],
-    activeId: null
-  }),
-  getters: {
-    active(state){
-      return state.list.filter((territorio) => territorio.id == state.activeId)
-    } 
-  },
-  actions: {
-    setActive(id) {
-      this.activeId = id;
-    },
-    addTerritorio(data){
-      this.list = [...this.list, data]
+export const useTerritoriosStore = defineStore('territorios', () => {
+  const list = ref([])
+  const activeId = ref(null)
+  const setActive = (id) => {
+    activeId = id;
+  }
+  const addTerritorio = (data) => {
+    list = [...this.list, data]
+  }
+
+  const update = async (data) => {
+    console.log("update", data)
+    if (!data.uuid) {
+      data.uuid = await uuid.new()
+      list.value = [...list.value, data]
+      return
     }
-  },
+    let nList = list.value
+    let i = nList.findIndex(i => uuid == data.uuid);
+    list.value =  [...nList.slice(0,i ), data, ...nList.slice(i + 1)]
+
+    // territorios.$patch({list: [...territorios.list, ]})
+  }
+
+  return {
+    list,
+    addTerritorio,
+    update
+  }
 })

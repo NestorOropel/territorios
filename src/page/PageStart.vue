@@ -63,6 +63,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouterStore } from '@/store/router'
+import { useTerritoriosStore } from '@/store/territorios'
+const territorios = useTerritoriosStore()
 const route = useRouterStore()
 const fileInput = ref('null')
 const newDoc = () => {
@@ -74,9 +76,11 @@ const fileChange = (e) => {
     let file = e.files[0];
     const reader = new FileReader();
     reader.readAsText(file, "UTF-8");
-    reader.onload = function (data) {
-      console.log( JSON.parse(data.target.result));
-      route.$patch({page: "home"});
+    reader.onload = function (result) {
+      // console.log( );
+      let data = JSON.parse(result.target.result)
+      territorios.$patch({list: data.territorios})
+      route.$patch({page: "listaTerritorio"});
     }
     reader.onerror = function (err) {
       console.error(err.target.result);
