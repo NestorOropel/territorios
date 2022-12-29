@@ -19,7 +19,7 @@
           {{ item.zona }}{{ item.numero }}
         </h2>
         <p>{{item.referencia}}</p>
-        <p>{{ item.mapConfig }} {{ item.zoom }}</p>
+        <!-- <p>{{ item.mapConfig }} {{ item.zoom }}</p> -->
         <MapaTerritorio
           v-if="mode== 'map'"
           class="map"
