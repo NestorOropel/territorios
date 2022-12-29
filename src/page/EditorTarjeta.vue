@@ -6,7 +6,7 @@
           <div>
             
             <h1 class="text-left  font-light">
-              Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
+              Tarjeta de Territorio {{ terr.zona }}{{ terr.número }}
             </h1>
             <TarjetaTerritorio v-show="step < 3" />
           </div>
@@ -17,31 +17,30 @@
                 <div class="mb-5 line-height-3">
                   <h3>1. Identificar Territorio</h3>
                   <p>
-                    Escribe en Zona una letra (A - Z) y en Numero el numero del territorio
+                    Escribe en Zona una letra (A - Z) y en Número el número del territorio
                     dentro de esa Zona.
                   </p>
                   <p>
-                    <b>Numero</b> es lo que normalmente usas como numero de territorio. El sistema te permite agregar del numero 1 al 99.
+                    <b>Número</b> es lo que normalmente usas como número de territorio. El sistema te permite agregar del número 1 al 99.
                   </p>
 
                   <p>
                     <b>Zona</b> es una letra, debes usarla si tienes mas de 99 territorios o si quieres dividir todo el territorio de la congregación en varias partes. Los territorios entonces serian por ejemplo: N1, N2, S1, S2, etc.
                   </p>
                   <p>
-                    Las zonas pueden estar asociadas a puntos cardinales (N, S, E, O) o grupo de la
-                    congregación o lo que tu decidas.
+                    Las zonas pueden estar asociadas a puntos cardinales (N, S, E, O) también a grupos de congregación, o puedes elegir cualquier otra opción que desees.
                   </p>
-                  <p>Si ya completaste los campos Zona y Numero presiona <b>Continuar</b>.</p>
-                  <p>Tambien puedes escribir un nombre de <b>Referencia</b> y <b>Notas</b>, datos que tambien son opcionales</p>
+                  <p>Si ya completaste los campos Zona y Número presiona <b>Continuar</b>.</p>
+                  <p>También puedes escribir un nombre de <b>Referencia</b> y <b>Notas</b>, datos que también son opcionales.</p>
 
                 </div>
                 <!-- <TarjetaTerritorio v-show="step == 0" /> -->
 
                 <div class="flex justify-content-end">
-                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.numero || terr.numero < 1" @click="step = 1" />
+                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.número || terr.número < 1" @click="step = 1" />
                 </div>
-                <div class="msg text-red-500 mt-3 text-sm" v-show="!terr.numero || terr.numero < 1">
-                  <b>Importante:</b> El boton continuar se habilitara cuando cumplas con lo minimo requerido en las instrucciones de una manera aceptable. <b>Presta atencion a las instrucciones</b>
+                <div class="msg text-red-500 mt-3 text-sm" v-show="!terr.número || terr.número < 1">
+                  <b>Importante:</b> El botón 'Continuar' solo estará disponible cuando hayas completado de manera aceptable lo mínimo requerido por las instrucciones. <b>Asegúrate de seguir las instrucciones con atención.</b>
                 </div>
                 
               </div>
