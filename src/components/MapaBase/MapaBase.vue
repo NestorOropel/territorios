@@ -19,7 +19,7 @@ const emit = defineEmits(['mapClick', 'mapMoveend', 'mapMoveend', 'zoomstart', '
 onMounted(() =>{
   let service = m.L.map("mapContainer").setView(props.center, 17)
   m.setMap(service);
-  m.L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  m.L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:
       '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(m.map);

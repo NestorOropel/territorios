@@ -206,7 +206,8 @@
           :mzNumbers="terr.mzNumbers"
           listen="true"
           :limits="terr.limits"
-          @ready="ready"
+          @reDraw="(data) => terr.$patch({mapConfig: data})"
+          
         ></MapaTerritorio>
       </div>
     </div>

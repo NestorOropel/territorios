@@ -13,6 +13,7 @@ export const useTerritorioStore = defineStore('territorio', () => {
   const angle = ref(-19)
   const zoom = ref(17)
   const limits = ref([])
+  const mapConfig = ref({})
   const mzNumbers = ref([])
   const puntoEncuentro = ref([])
 
@@ -43,11 +44,13 @@ export const useTerritorioStore = defineStore('territorio', () => {
       zoom: zoom.value,
       referencia: referencia.value,
       notas: notas.value,
+      mapConfig: mapConfig.value,
       puntoEncuentro: puntoEncuentro.value
     }
   }
   return { 
     uuid,
+    mapConfig,
     numero, zona, center, limits, mzNumbers, shape, 
     angle,
     zoom,

@@ -21,7 +21,8 @@ export const useTerritoriosStore = defineStore('territorios', () => {
       return
     }
     let nList = list.value
-    let i = nList.findIndex(i => uuid == data.uuid);
+    let i = nList.findIndex(item => item.uuid == data.uuid);
+
     list.value =  [...nList.slice(0,i ), data, ...nList.slice(i + 1)]
 
     // territorios.$patch({list: [...territorios.list, ]})
