@@ -1,31 +1,32 @@
 <template>
-  
-  <div ref="parent" class="back flex align-items-center justify-content-center">
-    <!-- <div class="mapContainer" > -->
-      <div class="shape" :style="shapeStyle">
-        <iframe v-if="ready" :src="'/mapa.html?center='+center+'&listen='+listen+'&zoom='+activeZoom+'&limits='+JSON.stringify(limits)+'&mzNumbers='+JSON.stringify(mzNumbers)" frameborder="0" :style="iframeStyle"></iframe>
-      </div>
-    
+  <div ref="parent" class=" flex align-items-center justify-content-center" :class="{ back: listen != 'false' }" :style="style">
+    <div class="shape" :style="shapeStyle">
+      <iframe v-if="ready" :src="'/mapa.html?center='+center+'&listen='+listen+'&zoom='+activeZoom+'&limits='+JSON.stringify(limits)+'&mzNumbers='+JSON.stringify(mzNumbers)" frameborder="0" :style="iframeStyle"></iframe>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, watch, defineEmits } from 'vue'
+import { ref, onMounted, defineProps, watch, defineEmits, computed } from 'vue'
 const emit = defineEmits(['reDraw'])
 const props = defineProps({
   center: Array,
   limits: Array,
+  mapConfig: Object,
   mzNumbers: Array,
   listen: {type: String, default: 'false'},
   shape: { type: Number, default: 0 },
   rotate: { type: Number, default: 0 },
-  zoom: { type: Number, default: 17 }
+  zoom: { type: Number, default: 17 },
+
 })
 const parent = ref("null")
 const ready = ref(false)
 const shapeStyle = ref({ height: '50vh'})
 const iframeStyle = ref({ height: '100vh'})
 var activeShape = null;
+
+const style = ref({})
 
 watch(
   props,
@@ -108,9 +109,32 @@ const reDraw = (shape) => {
 
 }
 onMounted(() => {
+  if (props.mapConfig){
+      reDrawFromConfig()
+      rotateMap(props.rotate)
+      zoomMap(props.zoom)
+      return
+  } 
+  
   reDraw(2)
   rotateMap(-18)
 })
+
+const reDrawFromConfig = () => {
+  let {h, w} = props.mapConfig
+  iframeStyle.value = {
+    marginTop: -(h * .5) + "px",
+    marginLeft: -(w * .5) + "px",
+    height: (h * 2) + "px",
+    width: (w * 2) + "px"
+  }
+  shapeStyle.value = {
+    height: h + "px",
+    width: w + "px",
+    position: 'relative',
+    overflow: 'hidden'
+  }
+}
 
 </script>
 

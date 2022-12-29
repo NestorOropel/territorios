@@ -3,8 +3,8 @@
     <div>
       <PageStart v-if="route.page == 'start'"/>
       <div v-else  class="flex">
-        <div class="menu flex-none flex h-screen">
-          <Menu />
+        <div class="menu noprint">
+          <Menu  />
         </div>
         <div class="flex-1 flex">
           
@@ -42,5 +42,15 @@ body {
 .menu {
   padding: 10px;
   border-right: 2px solid black;
+  height: 100vh;
+  flex: none;
+  display: flex;
 }
+
+@media print {
+    /* Aquí irían tus reglas CSS específicas para imprimir */
+    .noprint {
+      display: none !important;
+    }
+} 
 </style>
