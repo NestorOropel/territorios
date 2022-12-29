@@ -4,7 +4,7 @@
       <div class="col-3">
         <label>Número </label>
         <div class="p-inputgroup pt-1">
-          <InputText placeholder="Número de territorio (1 a 99)" v-model="número" maxlength="2"/>
+          <InputText placeholder="Número de territorio (1 a 99)" v-model="numero" maxlength="2"/>
         </div>
       </div>
       <div class="col-3">

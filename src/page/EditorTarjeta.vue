@@ -6,7 +6,7 @@
           <div>
             
             <h1 class="text-left  font-light">
-              Tarjeta de Territorio {{ terr.zona }}{{ terr.número }}
+              Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
             </h1>
             <TarjetaTerritorio v-show="step < 3" />
           </div>
@@ -37,9 +37,9 @@
                 <!-- <TarjetaTerritorio v-show="step == 0" /> -->
 
                 <div class="flex justify-content-end">
-                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.número || terr.número < 1" @click="step = 1" />
+                  <Button label="Continuar" class="p-button-outlined" v-bind:disabled="!terr.numero || terr.numero < 1" @click="step = 1" />
                 </div>
-                <div class="msg text-red-500 mt-3 text-sm" v-show="!terr.número || terr.número < 1">
+                <div class="msg text-red-500 mt-3 text-sm" v-show="!terr.numero || terr.numero < 1">
                   <b>Importante:</b> El botón 'Continuar' solo estará disponible cuando hayas completado de manera aceptable lo mínimo requerido por las instrucciones. <b>Asegúrate de seguir las instrucciones con atención.</b>
                 </div>
                 
