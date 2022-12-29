@@ -10,7 +10,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, watch } from 'vue'
+import { ref, onMounted, defineProps, watch, defineEmits } from 'vue'
+const emit = defineEmits(['reDraw'])
 const props = defineProps({
   center: Array,
   limits: Array,
@@ -99,7 +100,7 @@ const reDraw = (shape) => {
     position: 'relative',
     overflow: 'hidden'
   }
-  
+  emit("reDraw", {h, w})
   // console.log("activeShape", shape,  shapeStyle.value)
   setTimeout(()=>{
     ready.value = true

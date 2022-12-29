@@ -68,7 +68,7 @@ const territorios = useTerritoriosStore()
 const route = useRouterStore()
 const fileInput = ref('null')
 const newDoc = () => {
-  route.$patch({page: "home"});
+  route.$patch({page: "formTerritorio"});
 }
 const fileChange = (e) => {
   console.log("fileChange", e)
