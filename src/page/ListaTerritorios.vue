@@ -19,6 +19,7 @@
           {{ item.zona }}{{ item.numero }}
         </h2>
         <p>{{item.referencia}}</p>
+        <p>{{ item.mapConfig }} {{ item.zoom }}</p>
         <MapaTerritorio
           v-if="mode== 'map'"
           class="map"
@@ -29,7 +30,7 @@
           :mzNumbers="item.mzNumbers"
           listen="false"
           :limits="item.limits"
-          @ready="ready"
+          :mapConfig="item.mapConfig"
         ></MapaTerritorio>
       </div>
     </div>
@@ -68,4 +69,5 @@ const edit = (item) => {
     border: 1px solid rgb(210, 159, 48);
     cursor: pointer;
   }
+   
 </style>
