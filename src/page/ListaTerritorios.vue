@@ -3,7 +3,7 @@
     <div class="w-full">
       <div class="flex justify-content-between w-full align-items-center">
         <h1>Lista de territorios</h1>
-        <div>
+        <div class="noprint">
           <SelectButton v-model="mode" :options="modes" optionLabel="value" optionValue="value" dataKey="value" aria-labelledby="custom">
             <template #option="slotProps">
                 <i :class="slotProps.option.icon"></i>

@@ -155,7 +155,7 @@
                   <h4>Asigna el zoom al mapa </h4>
                   <div class="w-50">
                     <h5>Zoom: {{ terr.zoom }}</h5>
-                    <Slider v-model="terr.zoom" :step=".25" :min="14" :max="19" />
+                    <Slider v-model="terr.zoom" :step=".10" :min="14" :max="19" />
                     <p class="text-xs">Mueve el punto para hacer zoom</p>
                   </div>
 

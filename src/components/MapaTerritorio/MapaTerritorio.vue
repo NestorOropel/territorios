@@ -112,7 +112,6 @@ onMounted(() => {
   if (props.mapConfig){
       reDrawFromConfig()
       rotateMap(props.rotate)
-      zoomMap(props.zoom)
       return
   } 
   
@@ -121,7 +120,13 @@ onMounted(() => {
 })
 
 const reDrawFromConfig = () => {
+  let pw = parent.value.offsetWidth
   let {h, w} = props.mapConfig
+  // console.log("parent", pw, w)
+
+  let percent = pw/w
+  h = h * percent
+  w = w * percent
   iframeStyle.value = {
     marginTop: -(h * .5) + "px",
     marginLeft: -(w * .5) + "px",
@@ -134,6 +139,52 @@ const reDrawFromConfig = () => {
     position: 'relative',
     overflow: 'hidden'
   }
+  
+  // console.log("props.zoom * percent", props.zoom,  percent.toFixed(1) )
+  percent = percent.toFixed(1)
+  let zoom = props.zoom
+  // console.log("new percent ", percent)
+  switch(percent){
+    case '0.1': 
+      zoom -= 3
+      break;
+    case '0.2': 
+      zoom -= 2.3
+      break;
+    case '0.3': 
+      zoom -= 1.6
+      break;
+    case '0.4': 
+      zoom -= 1.2
+      break;
+    case '0.5': 
+      zoom -= 1
+      break;
+    case '0.6': 
+      zoom -= .60
+      break;
+    case '0.7': 
+      zoom -= .30
+      break;
+    case '0.8': 
+      zoom -= .10
+      break;
+    case '0.9': 
+      zoom -= .10
+      break;
+    case '1.0': 
+      // zoom = .10
+      break;
+    case '1.1': 
+      zoom += .10
+      break;
+    case '1.2': 
+      zoom += .30
+      break;
+
+  }
+  // console.log("props.zoom", props.zoom,  zoom )
+  zoomMap(zoom)
 }
 
 </script>
