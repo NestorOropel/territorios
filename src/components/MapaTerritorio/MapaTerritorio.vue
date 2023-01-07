@@ -143,7 +143,7 @@ const reDrawFromConfig = () => {
   // console.log("props.zoom * percent", props.zoom,  percent.toFixed(1) )
   percent = percent.toFixed(1)
   let zoom = props.zoom
-  // console.log("new percent ", percent)
+  console.log("new percent ", percent)
   switch(percent){
     case '0.1': 
       zoom -= 3
@@ -167,7 +167,7 @@ const reDrawFromConfig = () => {
       zoom -= .30
       break;
     case '0.8': 
-      zoom -= .10
+      zoom -= .20
       break;
     case '0.9': 
       zoom -= .10

@@ -1,6 +1,6 @@
 module.exports = {
   getIcons: (L) => {
-    var n1 = L.icon({ iconUrl: 'number/1-c.png', iconSize: [32, 32] });
+    var n1 = L.icon({ iconUrl: 'number/1-c.png', iconSize: [32, 32], alt: '1' });
     var n2 = L.icon({ iconUrl: 'number/2-c.png', iconSize: [32, 32] });
     var n3 = L.icon({ iconUrl: 'number/3-c.png', iconSize: [32, 32] });
     var n4 = L.icon({ iconUrl: 'number/4-c.png', iconSize: [32, 32] });

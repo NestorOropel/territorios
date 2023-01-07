@@ -14,28 +14,40 @@
       </div>
       
     </div>
-    <div class="grid territorios gap-1" v-if="mode != 'print'">
+    <div class="grid territorios" v-if="mode != 'print'">
+
       <div class="col-4" v-for="(item, index) in territorios.list" :key="index" @click="() => edit(item)">
-        <h2>
-          {{ item.zona }}{{ item.numero }}
-        </h2>
-        <p>{{item.referencia}}</p>
-        <!-- <p>{{ item.mapConfig }} {{ item.zoom }}</p> -->
-        <MapaTerritorio
-          v-if="mode== 'map'"
-          class="map"
-          :center="item.center"
-          :shape="item.shape"
-          :rotate="item.angle"
-          :zoom="item.zoom"
-          :mzNumbers="item.mzNumbers"
-          listen="false"
-          :limits="item.limits"
-          :mapConfig="item.mapConfig"
-        ></MapaTerritorio>
+        <div class="tarjeta">
+
+          <div class="titles">
+            <div>
+              <h5>Referencía</h5>
+              <p>{{item.referencia}}</p>
+            </div>
+            <h2>{{ item.zona }}{{ item.numero }}</h2>
+          </div>
+          <!-- <p>{{ item.mapConfig }} {{ item.zoom }}</p> -->
+          
+          
+          <div class="detalle" v-if="mode== 'map'">
+            <MapaTerritorio
+            class="map"
+            :center="item.center"
+            :shape="item.shape"
+            :rotate="item.angle"
+            :zoom="item.zoom"
+            :mzNumbers="item.mzNumbers"
+            listen="false"
+            :limits="item.limits"
+            :mapConfig="item.mapConfig"
+          ></MapaTerritorio>
+            <h5 v-if="item.notas">Notas</h5>
+            <div class="notas">{{ item.notas }}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="grid territorios gap-1" v-if="mode == 'print'">
+    <div class="grid territorios" v-if="mode == 'print'">
       <iframe ref="iframe" style="height:297mm; width:210mm; " src="/print" @load="loadIframe"></iframe>
     </div>
   </div>
@@ -95,13 +107,56 @@ window.addEventListener('message', function(event) {
 }, false);
 </script>
 
-<style>
+<style scoped>
   h1, h2 {
     font-weight: lighter;
   }
-  .territorios > div {
-    border: 1px solid rgb(210, 159, 48);
+  div.tarjeta {
+    border: 1px solid rgb(219, 218, 216);
+    padding: 5px;
+    background: rgb(253, 253, 253);
     cursor: pointer;
+    height: 100%;
   }
-   
+  .territorios {
+    align-items: stretch;
+  }
+  .titles {
+    text-align: left;
+    padding: 5px 0px 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .titles h2, .titles p {
+    margin: 0;
+    padding: 0;
+    color: darkslategrey;
+  }
+  .titles h2 {
+    font-weight: normal;
+  }
+  .titles p {
+    
+    padding-left: 0px;
+    font-size: .9em;
+    
+    
+  }
+  .detalle {
+    margin: 0px 0 0;
+    text-align: left;
+  }
+  h5 {
+    margin: 0;
+    padding: 0;
+  }
+  .detalle h5 {
+    padding-top: 10px;
+  }
+  .notas {
+    
+    font-size: .9em;
+  }
 </style>
