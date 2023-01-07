@@ -1,6 +1,6 @@
 // stores/counter.js
 import { defineStore } from 'pinia'
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import uuid from './mix/uuid'
 
 export const useTerritoriosStore = defineStore('territorios', () => {
@@ -27,10 +27,21 @@ export const useTerritoriosStore = defineStore('territorios', () => {
 
     // territorios.$patch({list: [...territorios.list, ]})
   }
+  
+  const state = reactive({
+    // text: "",
+    filteredZones: computed(() => {
+      const zonas = list.value.map(item => item.zona);
+      const zonasSinDuplicados = zonas.filter((zona, index) => zonas.indexOf(zona) === index);
+      return zonasSinDuplicados;
+
+    })
+  });
 
   return {
     list,
     addTerritorio,
-    update
+    update,
+    state
   }
 })

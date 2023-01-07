@@ -16,6 +16,7 @@
         <!-- <Button icon="pi pi-th-large" @click="visibleLeft = true" /> -->
         <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="newPlane" />
         <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
+        <Button icon="pi pi-map" title="Mapa de territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'mapaTerritorios'})" />
       </div>
       <Button icon="pi pi-save" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
     </div>

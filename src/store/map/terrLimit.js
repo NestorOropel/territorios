@@ -1,15 +1,15 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useTerrLimits = defineStore('terrLimitsStore', () => {
-  const terrLimits = ref([])
+export const useTerrLimit = defineStore('terrLimitStore', () => {
+  const terrLimit = ref([])
   
-  function setTerrLimits(data){
-    terrLimits.value = data
+  function setTerrLimit(data){
+    terrLimit.value = data
   }
 
   return { 
-    terrLimits,
-    setTerrLimits
+    terrLimit,
+    setTerrLimit
   }
 })

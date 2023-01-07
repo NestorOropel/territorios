@@ -6,10 +6,10 @@
 import { onMounted, defineProps, defineEmits, watch, computed } from 'vue'
 import { useMapStore } from '@/store/map'
 import { useMzNumbers } from '@/store/map/mzNumber';
-
-
+import { useTerrLimit } from "@/store/map/terrLimit";
 const m = useMapStore()
 const mzNumbers = useMzNumbers()
+const terrLimit = useTerrLimit();
 const props = defineProps({
   center: {
     type:Array,
@@ -19,7 +19,7 @@ const props = defineProps({
 
 const center = computed({
   get() {
-    console.log("props.center", props.center, m.center)
+    // console.log("props.center", props.center, m.center)
     return props.center || m.center
   },
   set(val) {

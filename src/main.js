@@ -20,15 +20,18 @@ import Slider from 'primevue/slider';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import SelectButton from 'primevue/selectbutton';
+import MultiSelect from 'primevue/multiselect';
 
 // componentes creados
 import Menu from '@/components/Menu/Menu.vue'
 import MapaBase from '@/components/MapaBase/MapaBase.vue'
+import MapControl from '@/components/MapControl/MapControl.vue'
 import MapaTerritorio from '@/components/MapaTerritorio/MapaTerritorio.vue'
 import TarjetaTerritorio from '@/components/TarjetaTerritorio/TarjetaTerritorio.vue'
 import EditorTarjeta from '@/page/EditorTarjeta.vue'
 import DownloadTerritorio from '@/page/DownloadTerritorio.vue'
 import ListaTerritorios from '@/page/ListaTerritorios.vue'
+import MapaTerritorios from '@/page/MapaTerritorios.vue'
 import PageStart from '@/page/PageStart.vue'
 
 
@@ -47,12 +50,15 @@ app
 .component('Textarea', Textarea)
 .component('FileUpload', FileUpload)
 .component('SelectButton', SelectButton)
+.component('MultiSelect', MultiSelect)
 .component('Menu', Menu)
 .component('PageStart', PageStart)
 .component('EditorTarjeta', EditorTarjeta)
 .component('MapaBase', MapaBase)
+.component('MapControl', MapControl)
 .component('MapaTerritorio', MapaTerritorio)
 .component('ListaTerritorios', ListaTerritorios)
+.component('MapaTerritorios', MapaTerritorios)
 .component('TarjetaTerritorio', TarjetaTerritorio)
 .component('DownloadTerritorio', DownloadTerritorio)
 .mount('#app');

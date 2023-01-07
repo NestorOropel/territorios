@@ -214,7 +214,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useTerritoriosStore } from "@/store/territorios";
 import { useTerritorioStore } from "@/store/territorio";
 import { useMapStore } from "@/store/map";
@@ -223,13 +223,16 @@ import { useMzNumbers } from "@/store/map/mzNumber";
 const territorios = useTerritoriosStore();
 const terr = useTerritorioStore();
 const m = useMapStore();
-
 const mzNumbers = useMzNumbers();
-
 const angle = ref(0)
+const step = ref(0);
+
+onMounted(() => {
+  // console.log("terr.center", terr.center)
+  if (!terr.center) terr.$patch({ center: m.getCenter() });
+})
 
 var polTerr;
-const step = ref(0);
 const clearLimits = () => {
   // terr.limits.value = []
   terr.$patch({ limits: [] });

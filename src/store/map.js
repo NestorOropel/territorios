@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import * as Lvue from "leaflet";
 import * as fIcons from './mix/iconsNumbers'
+import * as LIcons from './mix/iconsLetters'
 // import L from "@/libraries/leaflet.snogylop.js";
 
 export const useMapStore = defineStore('mapa', () => {
@@ -17,6 +18,8 @@ export const useMapStore = defineStore('mapa', () => {
 
   const icons = fIcons.getIcons(L);
   const nIcons = ref(icons);
+  const iconsLetter = LIcons.getIcons(L)
+  const lIcons = ref(iconsLetter);
 
   function setMap(data) {
     map.value = data
@@ -30,6 +33,7 @@ export const useMapStore = defineStore('mapa', () => {
   return { 
     map,
     nIcons,
+    lIcons,
     sectorOption,
     L: Lvue,
     setMap,

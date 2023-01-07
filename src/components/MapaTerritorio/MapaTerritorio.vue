@@ -152,7 +152,7 @@ const reDrawFromConfig = () => {
       zoom -= 2.3
       break;
     case '0.3': 
-      zoom -= 1.6
+      zoom -= 1.8
       break;
     case '0.4': 
       zoom -= 1.2

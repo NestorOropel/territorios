@@ -12,6 +12,7 @@
           <EditorTarjeta v-if="route.page == 'formTerritorio'" />
           <DownloadTerritorio v-if="route.page == 'downloadTerritorio'" />
           <ListaTerritorios v-if="route.page == 'listaTerritorio'" />
+          <MapaTerritorios v-if="route.page == 'mapaTerritorios'" />
         </div>
       </div>
     </div>
