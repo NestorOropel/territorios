@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineProps, defineEmits, watch  } from 'vue'
+import { onMounted, defineProps, defineEmits, watch, computed } from 'vue'
 import { useMapStore } from '@/store/map'
 import { useMzNumbers } from '@/store/map/mzNumber';
 
@@ -11,13 +11,26 @@ import { useMzNumbers } from '@/store/map/mzNumber';
 const m = useMapStore()
 const mzNumbers = useMzNumbers()
 const props = defineProps({
-  center: Array
+  center: {
+    type:Array,
+    default: null
+  }
+})
+
+const center = computed({
+  get() {
+    console.log("props.center", props.center, m.center)
+    return props.center || m.center
+  },
+  set(val) {
+    m.$patch({center: val})
+  }
 })
 
 const emit = defineEmits(['mapClick', 'mapMoveend', 'mapMoveend', 'zoomstart', 'zoomend', 'ready'])
 
 onMounted(() =>{
-  let service = m.L.map("mapContainer").setView(props.center, 17)
+  let service = m.L.map("mapContainer").setView(center.value, 17)
   m.setMap(service);
   m.L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:
@@ -28,6 +41,9 @@ onMounted(() =>{
   });
   m.map.on("moveend", function (e) {
     emit("mapMoveend", e)
+    let data = m.map.getBounds().getCenter()
+    // console.log(data)
+    center.value = [data.lat, data.lng];
   });
   m.map.on("zoomstart", function (e) {
     emit("zoomstart", e)

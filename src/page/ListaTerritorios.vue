@@ -4,16 +4,17 @@
       <div class="flex justify-content-between w-full align-items-center">
         <h1>Lista de territorios</h1>
         <div class="noprint">
-          <SelectButton v-model="mode" :options="modes" optionLabel="value" optionValue="value" dataKey="value" aria-labelledby="custom">
+          <SelectButton  v-if="!props.print" v-model="mode" :options="modes" optionLabel="value" optionValue="value" dataKey="value" aria-labelledby="custom">
             <template #option="slotProps">
                 <i :class="slotProps.option.icon"></i>
             </template>
           </SelectButton>
+          <Button v-if="props.print" icon="pi pi-print" @click="print" />
         </div>
       </div>
       
     </div>
-    <div class="grid territorios gap-1">
+    <div class="grid territorios gap-1" v-if="mode != 'print'">
       <div class="col-4" v-for="(item, index) in territorios.list" :key="index" @click="() => edit(item)">
         <h2>
           {{ item.zona }}{{ item.numero }}
@@ -34,6 +35,9 @@
         ></MapaTerritorio>
       </div>
     </div>
+    <div class="grid territorios gap-1" v-if="mode == 'print'">
+      <iframe ref="iframe" style="height:297mm; width:210mm; " src="/print" @load="loadIframe"></iframe>
+    </div>
   </div>
 </template>
 
@@ -46,19 +50,49 @@ import { useTerritorioStore } from "@/store/territorio";
 const territorios = useTerritoriosStore();
 const territorio = useTerritorioStore();
 const route = useRouterStore();
+const iframe = ref("null")
+const props = defineProps({
+  print: {type: Boolean, default: false},
+})
 
 const visibleLeft = ref(false);
-const mode = ref('list');
+
+let activeMode = props.print ? 'map' : 'list';
+console.log("activeMode", activeMode)
+const mode = ref(activeMode);
 const modes = ref([
   // {icon: 'pi pi-align-left', value: 'Left'},
   // {icon: 'pi pi-align-right', value: 'Right'},
   {icon: 'pi pi-list', value: 'list'},
   {icon: 'pi pi-table', value: 'map'},
+  {icon: 'pi pi-print', value: 'print'},
 ]);
+
 const edit = (item) => {
   territorio.$patch(item)
   route.$patch({page: 'formTerritorio'})
 }
+
+const loadIframe = () => {
+  // console.log("load iframe")
+  var frame = iframe.value;
+  frame.contentWindow.postMessage({call:'sendList', value: JSON.parse(JSON.stringify(territorios.list))});
+}
+
+const print = () => {
+  window.print();
+}
+window.addEventListener('message', function(event) {
+  var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
+  // console.log("origen", origin, event)
+  if (origin !== 'http://localhost:8080' && origin !== 'https://territorios.web.app') return;
+  // console.log("origen ok")
+  if (typeof event.data == 'object' && event.data.call=='sendList') {
+    // console.log("message", event.data)
+    territorios.$patch({list: event.data.value})
+    
+  }
+}, false);
 </script>
 
 <style>

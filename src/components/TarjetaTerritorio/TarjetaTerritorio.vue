@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="col-3">
-        <label>Zona (opcional) *</label>
+        <label>Zona (opcional)</label>
         <div class="p-inputgroup pt-1">
           <InputText placeholder="Zona (A - Z)" title="* Si hay mas de 99 territorios es necesario dividirlo en zonas" v-model="zona" maxlength="1" />
         </div>

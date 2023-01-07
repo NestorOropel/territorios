@@ -2,12 +2,13 @@
   <div>
     <div>
       <PageStart v-if="route.page == 'start'"/>
+      
+      <ListaTerritorios v-else-if="route.page == 'print'" :print="true" />
       <div v-else  class="flex">
         <div class="menu noprint">
           <Menu  />
         </div>
         <div class="flex-1 flex">
-          
           <EditorTarjeta v-if="route.page == 'formTerritorio'" />
           <DownloadTerritorio v-if="route.page == 'downloadTerritorio'" />
           <ListaTerritorios v-if="route.page == 'listaTerritorio'" />

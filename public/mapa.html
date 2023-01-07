@@ -41,6 +41,7 @@
 
       let { center, limits, zoom, listen, mzNumbers } = params;
       center = JSON.parse('['+center+']');
+      // console.log("MAP CENTER", center, params)
       limits = JSON.parse(limits)
       limits = [...limits, limits[0]]
       mzNumbers = JSON.parse(mzNumbers)

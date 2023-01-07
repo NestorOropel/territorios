@@ -64,6 +64,8 @@
 import { ref } from 'vue'
 import { useRouterStore } from '@/store/router'
 import { useTerritoriosStore } from '@/store/territorios'
+import { useMapStore } from '@/store/map'
+const m = useMapStore()
 const territorios = useTerritoriosStore()
 const route = useRouterStore()
 const fileInput = ref('null')
@@ -80,6 +82,7 @@ const fileChange = (e) => {
       // console.log( );
       let data = JSON.parse(result.target.result)
       territorios.$patch({list: data.territorios})
+      m.$patch({center: data.center || [-31.5653073, -68.5638051]})
       route.$patch({page: "listaTerritorio"});
     }
     reader.onerror = function (err) {

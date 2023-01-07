@@ -28,18 +28,21 @@
 <script setup>
 import { ref } from 'vue'
 import { useTerritoriosStore } from '@/store/territorios'
+import { useMapStore } from '@/store/map'
 const territorios = useTerritoriosStore()
+const m = useMapStore()
 
 const downloadFile = () => {
   //create or obtain the file's content
   let data = {
     version: 1,
+    center: m.center,
     territorios: territorios.list
   }
   console.log("data", data)
   var content = JSON.stringify(data);
   //create a file and put the content, name and type
-  var file = new File(["\ufeff"+content], 'myFile.territorio', {type: "text/plain:charset=UTF-8"});
+  var file = new File(["\ufeff"+content], 'miterritorio.territorio', {type: "text/plain:charset=UTF-8"});
 
   //create a ObjectURL in order to download the created file
   let url = window.URL.createObjectURL(file);

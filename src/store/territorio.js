@@ -8,7 +8,7 @@ export const useTerritorioStore = defineStore('territorio', () => {
   const numero = ref()
   const referencia = ref('')
   const notas = ref('')
-  const center = ref([-31.5653073, -68.5638051])
+  const center = ref(null)
   const shape = ref(0)
   const angle = ref(-19)
   const zoom = ref(17)

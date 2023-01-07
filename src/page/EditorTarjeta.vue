@@ -272,7 +272,9 @@ const zoomstart = () => {
 const zoomend = () => {
   configureLimit();
 };
-const onMapMoveend = (e) => {};
+const onMapMoveend = (e) => {
+  terr.$patch({ center: m.getCenter() });
+};
 
 const ready = () => {
   configureLimit();

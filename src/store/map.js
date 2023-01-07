@@ -6,6 +6,7 @@ import * as fIcons from './mix/iconsNumbers'
 
 export const useMapStore = defineStore('mapa', () => {
   const map = ref(null)
+  const center = ref([-31.5653073, -68.5638051])
 
   var sectorOption = ref({
     color: 'red',
@@ -33,5 +34,6 @@ export const useMapStore = defineStore('mapa', () => {
     L: Lvue,
     setMap,
     getCenter,
+    center,
   }
 })

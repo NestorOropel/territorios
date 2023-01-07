@@ -14,10 +14,9 @@
     <div class="flex flex-column justify-content-between align-content-between h-full">
       <div class="flex flex-column buttonspace">
         <!-- <Button icon="pi pi-th-large" @click="visibleLeft = true" /> -->
-        <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'formTerritorio'})" />
+        <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="newPlane" />
         <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
       </div>
-
       <Button icon="pi pi-save" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
     </div>
     
@@ -28,6 +27,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouterStore } from '@/store/router'
+import { useTerritorioStore } from "@/store/territorio";
+const terr = useTerritorioStore();
 const route = useRouterStore()
 const visibleLeft = ref(false)
 const options = ref([
@@ -35,7 +36,12 @@ const options = ref([
     name: "Nuevo territorio"
   }
 ])
-   
+
+const newPlane = () => {
+  terr.$reset();
+  route.$patch({page: 'formTerritorio'})
+}
+
 </script>
 
 <style>
