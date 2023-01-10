@@ -39,9 +39,9 @@
 
       // console.log("params", params)
 
-      let { center, limits, zoom, listen, mzNumbers } = params;
+      let { center, limits, zoom, listen, mzNumbers, puntoEncuentro } = params;
       center = JSON.parse('['+center+']');
-      // console.log("MAP CENTER", center, params)
+      console.log("MAP params", params)
       limits = JSON.parse(limits)
       limits = [...limits, limits[0]]
       mzNumbers = JSON.parse(mzNumbers)
@@ -73,6 +73,24 @@
           // numbers.push(mark)
         }
       }
+
+      var puntoEncuentroMap
+      function renderPuntoEncuentro() {
+        if (puntoEncuentroMap) puntoEncuentroMap.remove()
+        let  list = []
+        // console.log("m.iconMarker", m.iconMarker)  
+        for ( let i in puntoEncuentro){
+          list.push(m.L.marker(puntoEncuentro[i].latlng, { icon: 
+            L.icon({
+              iconUrl: `pe.png`,
+              iconSize: [32, 32],
+              alt: 'Punto de Encuentro'
+            })
+          }))
+        }
+        puntoEncuentroMap = L.layerGroup(list).addTo(map);
+      }
+      renderPuntoEncuentro()
     </script>
   </body>
 </html>

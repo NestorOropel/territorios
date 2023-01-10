@@ -20,6 +20,50 @@
       <strong  class="noprint">We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <style>
+
+:root {
+  --icon-borde: rgb(156, 156, 0);
+}
+
+/*General marker style*/
+.map-marker {
+  position: relative;
+  text-align: center;
+  font-weight: bold;
+  background: var(--icon-borde);
+  width: 34px;
+  height: 34px;
+  border-radius: 5px;
+  margin-top: -46px; /*Shift by arrow top+height*/
+  margin-left: -17px; /*Shift by half the marker width*/
+}
+
+.map-marker div.arrow {
+  position: relative;
+  border-style: solid;
+  border-color: var(--icon-borde) transparent transparent transparent;
+  border-width: 10px 6px 0 6px; /*Arrow w/h is defined by the borders*/
+  left: 12px; /*(Marker width - arrow width)/2*/
+  width: 0px; height: 0px;
+}
+
+
+.map-marker div.icon {
+  position: relative;
+  overflow: hidden;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-color: rgb(255, 255, 254);
+  width: 32px; /*Same as marker width*/
+  height: 32px; /*Same as marker height*/
+  line-height: 32px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-left: 1px;
+  margin-top: 1px;
+}
+    </style>
     <!-- built files will be auto injected -->
   </body>
 </html>

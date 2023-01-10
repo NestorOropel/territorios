@@ -1,6 +1,7 @@
 <template>
   <div ref="parent" class=" flex align-items-center justify-content-center" :class="{ back: listen != 'false' }" :style="style">
     <div class="shape" :style="shapeStyle">
+      <!-- puntoEncuentro='+terr.puntoEncuentro+'& -->
       <iframe v-if="ready" :src="'/mapa.html?center='+center+'&listen='+listen+'&zoom='+activeZoom+'&limits='+JSON.stringify(limits)+'&mzNumbers='+JSON.stringify(mzNumbers)" frameborder="0" :style="iframeStyle"></iframe>
     </div>
   </div>
@@ -14,6 +15,7 @@ const props = defineProps({
   limits: Array,
   mapConfig: Object,
   mzNumbers: Array,
+  terr: Object,
   listen: {type: String, default: 'false'},
   shape: { type: Number, default: 0 },
   rotate: { type: Number, default: 0 },
@@ -143,7 +145,7 @@ const reDrawFromConfig = () => {
   // console.log("props.zoom * percent", props.zoom,  percent.toFixed(1) )
   percent = percent.toFixed(1)
   let zoom = props.zoom
-  console.log("new percent ", percent)
+  // console.log("new percent ", percent)
   switch(percent){
     case '0.1': 
       zoom -= 3

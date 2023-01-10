@@ -7,7 +7,7 @@ module.exports = {
   // }
   getIcons: (L) => {
     const icons = [];
-    for (let i = 0; i <= 99; i++) {
+    for (let i = 1; i <= 99; i++) {
       const icon = L.icon({
         iconUrl: `number/${i}-c.png`,
         iconSize: [32, 32],

@@ -8,7 +8,7 @@
             <h1 class="text-left  font-light">
               Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
             </h1>
-            <TarjetaTerritorio v-show="step < 3" />
+            <TarjetaTerritorio v-show="step < 4" />
           </div>
           <div>
             <h5 class="text-left  text-red-700">Instrucciones</h5>
@@ -116,7 +116,30 @@
               </div>
               <div v-show="step == 3">
                 <div class="mb-5 line-height-3">
-                  <h3>4. Definir diseño de mapa para {{ terr.zona }}{{ terr.numero }}</h3>
+                  <h3>4. Definir puntos de encuentro para {{ terr.zona }}{{ terr.numero }}</h3>
+                  <p>
+                    Tienes que <b>hacer click sobre el mapa</b> en la ubicación que se podria usar como punto de encuentro del territorio
+                    {{ terr.zona }}{{ terr.numero }}. Veras que al hacer click aparece una lista debajo.
+                  </p>
+                  <div class="grid" v-for="(item, index) in terr.puntoEncuentro" :key="index">
+                    <div class="col-12">
+                      <label>Punto de Encuentro {{ index + 1 }} </label>
+                      <div class="p-inputgroup pt-1">
+                        <InputText placeholder="Punto de encuentro" v-model="item.name" maxlength="2"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex justify-content-between">
+                  <Button label="Atras" class="p-button-outlined" @click="step = 2" />
+                  
+                  
+                  <Button label="Continuar" class="p-button-outlined"  @click="step = 4" />
+                </div>
+              </div>
+              <div v-show="step == 4">
+                <div class="mb-5 line-height-3">
+                  <h3>5. Definir diseño de mapa para {{ terr.zona }}{{ terr.numero }}</h3>
                   <p>¡Ya casi terminamos!</p>
                   <div class="msg text-red-500 text-sm" >
                     <b>Recuerda leer atentamente las instrucciones.</b>
@@ -166,7 +189,7 @@
                 </div>
 
                 <div class="flex justify-content-between">
-                  <Button label="Atras" class="p-button-outlined" @click="step = 2" />
+                  <Button label="Atras" class="p-button-outlined" @click="step = 3" />
 
                   <Button label="Guardar Cambios" class="p-button-outlined" @click="guardar()" />
                 </div>
@@ -186,7 +209,7 @@
       </div>
       <div class="col col-6 pb-0">
         <MapaBase
-          v-if="step != 3"
+          v-if="step != 4"
           class="map"
           :center="terr.center"
           @mapClick="onMapClick"
@@ -196,7 +219,7 @@
           @ready="ready"
         ></MapaBase>
         <MapaTerritorio
-          v-if="step == 3"
+          v-if="step == 4"
           class="map"
           :center="terr.center"
           :shape="terr.shape"
@@ -205,6 +228,7 @@
           :mzNumbers="terr.mzNumbers"
           listen="true"
           :limits="terr.limits"
+          :terr="terr"
           @reDraw="(data) => terr.$patch({mapConfig: data})"
           
         ></MapaTerritorio>
@@ -248,6 +272,7 @@ const clearMzNumbers = () => {
 const onMapClick = (e) => {
   if (step.value == 1) configureLimit(e);
   if (step.value == 2) configureMzNumber(e);
+  if (step.value == 3) configurePuntoEncuentro(e);
 };
 
 const guardar = () => {
@@ -279,8 +304,12 @@ const onMapMoveend = (e) => {
   terr.$patch({ center: m.getCenter() });
 };
 
-const ready = () => {
+const ready = () => { 
+  mzNumbers.setMzNumbers([]);
+  // console.log("readyyyy", terr.mzNumbers)
   configureLimit();
+  if (terr.mzNumbers) mzNumbers.setMzNumbers(terr.mzNumbers);
+  renderPuntoEncuentro()
 };
 
 window.addEventListener('storage',function(e){
@@ -290,6 +319,39 @@ window.addEventListener('storage',function(e){
    } 
    // else, event is caused by an update to localStorage, ignore it
 });
+
+ const configurePuntoEncuentro = async (data) => {
+  console.log("dconfigurePuntoEncuentro", data.latlng)
+  
+  let address = await getStreetName(data.latlng)
+  
+  terr.addPuntoEncuentro({
+    name: address.name,
+    latlng: data.latlng
+  })
+
+  renderPuntoEncuentro()
+  
+}
+
+var puntoEncuentroMap
+function renderPuntoEncuentro() {
+  if (puntoEncuentroMap) puntoEncuentroMap.remove()
+  let  list = []
+  console.log("m.iconMarker", m.iconMarker)
+  for ( let i in terr.puntoEncuentro){
+    list.push(m.L.marker(terr.puntoEncuentro[i].latlng, { icon: m.iconMarker[0] }))
+  }
+  puntoEncuentroMap = L.layerGroup(list).addTo(m.map);
+}
+
+async function getStreetName(latlng) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`;
+  let response = await fetch(url)
+  let data = await response.json()
+  // console.log("data", data)
+  return Promise.resolve(data)
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

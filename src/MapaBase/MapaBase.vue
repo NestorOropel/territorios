@@ -79,9 +79,11 @@ const setNumbers = (data) => {
 
 </script>
 
-<style scoped>
+<style>
 #mapContainer {
   width: 100%;
   height: 100%;
 }
+
+
 </style>

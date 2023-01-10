@@ -8,6 +8,7 @@ import * as LIcons from './mix/iconsLetters'
 export const useMapStore = defineStore('mapa', () => {
   const map = ref(null)
   const center = ref([-31.5653073, -68.5638051])
+  
 
   var sectorOption = ref({
     color: 'red',
@@ -15,6 +16,14 @@ export const useMapStore = defineStore('mapa', () => {
     opacity: 0.5,
     smoothFactor: 1
   })
+
+  const iconMarker = ref([
+    L.icon({
+      iconUrl: `pe.png`,
+      iconSize: [32, 32],
+      alt: 'Punto de Encuentro'
+    })
+  ]);
 
   const icons = fIcons.getIcons(L);
   const nIcons = ref(icons);
@@ -35,6 +44,7 @@ export const useMapStore = defineStore('mapa', () => {
     nIcons,
     lIcons,
     sectorOption,
+    iconMarker,
     L: Lvue,
     setMap,
     getCenter,
