@@ -7,6 +7,7 @@ export const useMzNumbers = defineStore('mzNumberStore', () => {
   function setMzNumbers(data){
     mzNumbers.value = data
   }
+  
 
   return { 
     mzNumbers,

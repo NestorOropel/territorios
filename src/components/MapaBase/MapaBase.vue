@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ props.terrID }} -->
   <div id="mapContainer"></div>
 </template>
 
@@ -14,8 +15,17 @@ const props = defineProps({
   center: {
     type:Array,
     default: null
-  }
+  },
+  terrID: {
+    type: String,
+    default: null
+  },
+  color: {
+    type: Object,
+    default: null
+  },
 })
+var numbers = []
 
 const center = computed({
   get() {
@@ -47,9 +57,13 @@ onMounted(() =>{
   });
   m.map.on("zoomstart", function (e) {
     emit("zoomstart", e)
+    for ( let i in numbers) {
+      m.map.removeLayer(numbers[i])
+    }
   });
   m.map.on("zoomend", function (e) {
     emit("zoomend", e)
+    setNumbers(mzNumbers.mzNumbers)
   });
   emit('ready')
 })
@@ -64,15 +78,37 @@ watch(
   { deep: true }
 )
 
+watch(
+  props.color,
+  (state) => {
+  //  console.log("state watch", state)
+   setNumbers(mzNumbers.mzNumbers)
+  },
+  { deep: true }
+)
 
-var numbers = []
+
+
 const setNumbers = (data) => {
   // console.log("setNumbers",data)
+  // console.log('props.color', props.color)
+  const colors = (props.color) ? `color: ${props.color.color}; background: ${props.color.backgroundColor}; border: ${props.color.backgroundColor}; ` : '';
   for ( let i in numbers) {
     m.map.removeLayer(numbers[i])
   }
   for (let i in data) {
-    let mark = m.L.marker(data[i][0], { icon: m.nIcons[data[i][1]]}).addTo(m.map);
+    if (!props.terrID && parseInt(i) === 0) continue;
+    const nro = (parseInt(i) === 0) ? props.terrID : i;
+    const classCenter = (parseInt(i) === 0) ? 'manzana-marker-center' : '';
+    // console.log('addnumber', nro);
+    let icon = L.divIcon({
+      className: 'manzana-marker ',
+      iconSize:null,
+      html: `<div class="icon ${classCenter}" style="font-size: 1em; ${(parseInt(i) === 0) ? '' : colors}">${nro}</div><div class="arrow" />`
+    });
+    // console.log('addnumber', nro);
+    // numbers.push(m.L.marker(center, { icon }))
+    let mark = m.L.marker(data[i][0], { icon }).addTo(m.map);
     numbers.push(mark)
   }
 }

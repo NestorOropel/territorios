@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+
 import * as Lvue from "leaflet";
 import * as fIcons from './mix/iconsNumbers'
 import * as LIcons from './mix/iconsLetters'
@@ -19,7 +20,7 @@ export const useMapStore = defineStore('mapa', () => {
 
   const iconMarker = ref([
     L.icon({
-      iconUrl: `pe.png`,
+      iconUrl: `/pe.png`,
       iconSize: [32, 32],
       alt: 'Punto de Encuentro'
     })
@@ -49,5 +50,13 @@ export const useMapStore = defineStore('mapa', () => {
     setMap,
     getCenter,
     center,
+  }
+},
+{ 
+  persist: {
+    key: 'map',
+    storage: localStorage,
+    debug: true,
+    paths: ['center'],
   }
 })

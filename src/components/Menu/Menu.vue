@@ -18,7 +18,10 @@
         <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
         <Button icon="pi pi-map" title="Mapa de territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'mapaTerritorios'})" />
       </div>
-      <Button icon="pi pi-save" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+      <div class="flex flex-column buttonspace">
+        <Button icon="pi pi-home" class="p-button-outlined p-button-secondary" title="Inicio" @click="route.$patch({page: 'start'})" />
+        <Button icon="pi pi-save" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+      </div>
     </div>
     
     

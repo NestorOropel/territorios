@@ -11,11 +11,24 @@
     <script src="./js/leaflet.snogylop.js"></script>
     <script src="./js/iconsNumbers.js"></script>
     <style>
+      
+      :root {
+        --icon-borde: rgb(156, 156, 0);
+      }
       body {
         padding: 0;
         margin: 0;
         height: 100%;
         display: block;
+      }
+      .manzana-marker .icon {
+        padding: 1px 4px 1px 4px;
+        border-radius: 2px;
+        background-color: rgb(255, 255, 254);
+        border: 1px solid var(--icon-borde);
+        margin-top: -.5em;
+        margin-left: -.5em;
+        transform: rotate(18deg);
       }
     </style>
   </head>
@@ -35,9 +48,6 @@
       const params = Object.fromEntries(  
         new URLSearchParams(window.location.search)
       )
-
-
-      // console.log("params", params)
 
       let { center, limits, zoom, listen, mzNumbers, puntoEncuentro } = params;
       center = JSON.parse('['+center+']');
@@ -69,8 +79,14 @@
 
       if (Array.isArray(mzNumbers)) {
         for (let i in mzNumbers) {
-          L.marker(mzNumbers[i][0], { icon: nIcons[mzNumbers[i][1]]}).addTo(map);
-          // numbers.push(mark)
+          if (parseInt(i) === 0) continue;
+          const nro = parseInt(i);
+          let icon = L.divIcon({
+            className: 'manzana-marker ',
+            iconSize:null,
+            html:'<div class="icon" style="font-size: 1em">'+nro+'</div><div class="arrow" />'
+          });
+          L.marker(mzNumbers[i][0], { icon }).addTo(map);
         }
       }
 
@@ -89,6 +105,7 @@
           }))
         }
         puntoEncuentroMap = L.layerGroup(list).addTo(map);
+        
       }
       renderPuntoEncuentro()
     </script>

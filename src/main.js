@@ -34,8 +34,11 @@ import ListaTerritorios from '@/page/ListaTerritorios.vue'
 import MapaTerritorios from '@/page/MapaTerritorios.vue'
 import PageStart from '@/page/PageStart.vue'
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 pinia.use(resetStore)
 const app = createApp(App);
 

@@ -4,7 +4,7 @@
       <div class="header">
         <h1>Mapa de Territorio</h1>
         <div class="options">
-          <MapControl />
+          <MapControl ref="control" />
         </div>
       </div>
       <div class="grid grid-nogutter max-page w-full">    
@@ -38,7 +38,7 @@ const m = useMapStore();
 const mzNumbers = useMzNumbers();
 const angle = ref(0)
 const step = ref(0);
-
+const control = ref('');
 
 
 var polTerr;
@@ -83,6 +83,7 @@ const zoomstart = () => {
 };
 const zoomend = () => {
   configureLimit();
+  control.value.filter()
 };
 const onMapMoveend = (e) => {
   terr.$patch({ center: m.getCenter() });

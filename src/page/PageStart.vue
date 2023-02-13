@@ -9,7 +9,7 @@
         <div class="mt-5">
           <h3 class="mt-0 font-light">¿Ya tienes tu archivo .territorio?</h3>
           <p>Solo tienes que abrir el archivo en tu equipo y buscarlo. No olvides descargar la nueva versión una vez hayas terminado.</p>
-          <FileUpload ref="fileInput" chooseLabel="Abrir" chooseIcon="pi pi-folder-open" uploadIcon="pi pi-folder-open" mode="basic" name="file" accept=".territorio" @select="fileChange" />
+          <FileUpload ref="fileInput" chooseLabel="Abrir" chooseIcon="pi pi-folder-open" uploadIcon="pi pi-folder-open" mode="basic" name="file" accept=".territorio,application/json" @select="fileChange" />
         </div>
 
         <div class="mt-5">
@@ -70,6 +70,8 @@ const territorios = useTerritoriosStore()
 const route = useRouterStore()
 const fileInput = ref('null')
 const newDoc = () => {
+  territorios.$patch({list: [], activeId: null})
+  m.$reset();
   route.$patch({page: "formTerritorio"});
 }
 const fileChange = (e) => {
@@ -81,6 +83,14 @@ const fileChange = (e) => {
     reader.onload = function (result) {
       // console.log( );
       let data = JSON.parse(result.target.result)
+      for (let i = 0; i < data.territorios.length; i++) {
+        if (!data.territorios[i].color) {
+          data.territorios[i].color = {
+            backgroundColor: 'rgb(255, 255, 254)',
+            color: '#000000',
+          }
+        }
+      }
       territorios.$patch({list: data.territorios})
       m.$patch({center: data.center || [-31.5653073, -68.5638051]})
       route.$patch({page: "listaTerritorio"});

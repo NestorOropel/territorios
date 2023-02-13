@@ -14,18 +14,40 @@ export const useTerritorioStore = defineStore('territorio', () => {
   const zoom = ref(17)
   const limits = ref([])
   const mapConfig = ref({})
+  const color = ref({
+    backgroundColor: 'rgb(255, 255, 254)',
+    color: '#000000',
+  })
   const mzNumbers = ref([])
   const puntoEncuentro = ref([])
 
   const addLimit = (latlng) => {
     limits.value.push(latlng)
   }
+  function removeLastLimit(){
+    let list = [...limits.value]
+    list.pop()
+    limits.value = list
+  }
   const addMzNumber = (latlng) => {
     mzNumbers.value.push(latlng)
+  }
+  function removeLastMz(){
+    let list = [...mzNumbers.value]
+    list.pop()
+    mzNumbers.value = list
   }
   const addPuntoEncuentro = (data) => {
     puntoEncuentro.value.push(data)
   }
+  function removeLastPE(){
+    let list = [...puntoEncuentro.value]
+    list.pop()
+    puntoEncuentro.value = list
+  }
+
+
+
 
   const setId = () => {
     uuid.value = uuid.new()
@@ -36,16 +58,17 @@ export const useTerritorioStore = defineStore('territorio', () => {
       uuid: uuid.value,
       numero: numero.value,
       zona: zona.value,
-      center: center.value,
-      limits: limits.value,
-      mzNumbers: mzNumbers.value,
+      center: JSON.parse(JSON.stringify(center.value)),
+      color: JSON.parse(JSON.stringify(color.value)),
+      mapConfig: JSON.parse(JSON.stringify(mapConfig.value)),
+      limits: JSON.parse(JSON.stringify(limits.value)),
+      mzNumbers: JSON.parse(JSON.stringify(mzNumbers.value)),
+      puntoEncuentro: JSON.parse(JSON.stringify(puntoEncuentro.value)),
       shape: shape.value, 
       angle: angle.value,
       zoom: zoom.value,
       referencia: referencia.value,
       notas: notas.value,
-      mapConfig: mapConfig.value,
-      puntoEncuentro: puntoEncuentro.value
     }
   }
   return { 
@@ -56,11 +79,19 @@ export const useTerritorioStore = defineStore('territorio', () => {
     zoom,
     referencia,
     notas,
+    color,
     puntoEncuentro,
     addLimit,
+    removeLastLimit,
     addMzNumber,
+    removeLastMz,
     addPuntoEncuentro,
+    removeLastPE,
     setId,
-    getData,
+    getData
   }
-})
+},
+{
+  persist: false
+}
+)

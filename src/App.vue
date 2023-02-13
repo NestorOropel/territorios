@@ -54,5 +54,6 @@ body {
     .noprint {
       display: none !important;
     }
-} 
+}
+
 </style>

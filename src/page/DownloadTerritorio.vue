@@ -19,6 +19,12 @@
         <div>
           <Button label="Guardar"  class="p-button-success" icon="pi pi-save" @click="downloadFile" />
         </div>
+
+        <h3 class="mb-0 font-light">Eliminar datos del navegador</h3>
+        <p class="mt-1">Los datos han sido almacenados en la cache de este navegador para la persistencia cuando recargas la pantalla, para eliminarlos toca el boton eliminar. Te recomendamos descargar una copia de los datos antes de hacerlo presionando el boton Guardar.</p>
+        <div>
+          <Button label="Eliminar"  class="p-button-danger" icon="pi pi-save" @click="clear" />
+        </div>
       </div>
   </div>
     
@@ -41,8 +47,9 @@ const downloadFile = () => {
   }
   console.log("data", data)
   var content = JSON.stringify(data);
+  const blob = new Blob([content], { type: 'application/json' });
   //create a file and put the content, name and type
-  var file = new File(["\ufeff"+content], 'miterritorio.territorio', {type: "text/plain:charset=UTF-8"});
+  var file = new File([ blob ], 'miterritorio.json');
 
   //create a ObjectURL in order to download the created file
   let url = window.URL.createObjectURL(file);
@@ -55,6 +62,10 @@ const downloadFile = () => {
   a.click();
   window.URL.revokeObjectURL(url);
 } 
+
+const clear = () => {
+  localStorage.clear()
+}
 </script>
 
 <style>

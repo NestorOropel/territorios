@@ -29,7 +29,6 @@ export const useTerritoriosStore = defineStore('territorios', () => {
   }
   
   const state = reactive({
-    // text: "",
     filteredZones: computed(() => {
       const zonas = list.value.map(item => item.zona);
       const zonasSinDuplicados = zonas.filter((zona, index) => zonas.indexOf(zona) === index);
@@ -43,5 +42,13 @@ export const useTerritoriosStore = defineStore('territorios', () => {
     addTerritorio,
     update,
     state
+  }
+},
+{ 
+  persist: {
+    key: 'territorios',
+    storage: localStorage,
+    paths: ['list'],
+    // debug: true,
   }
 })

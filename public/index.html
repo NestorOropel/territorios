@@ -1,69 +1,96 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
-    
-    <title>Territorio</title>
 
-    <!-- Load leaflet.snogylop -->
-    <!-- <script src="./leaflet.snogylop.js"></script> -->
-    
-  </head>
-  <body>
-    <noscript>
-      <strong  class="noprint">We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <style>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+  <title>Territorio</title>
 
-:root {
-  --icon-borde: rgb(156, 156, 0);
-}
+  <!-- Load leaflet.snogylop -->
+  <!-- <script src="./leaflet.snogylop.js"></script> -->
 
-/*General marker style*/
-.map-marker {
-  position: relative;
-  text-align: center;
-  font-weight: bold;
-  background: var(--icon-borde);
-  width: 34px;
-  height: 34px;
-  border-radius: 5px;
-  margin-top: -46px; /*Shift by arrow top+height*/
-  margin-left: -17px; /*Shift by half the marker width*/
-}
+</head>
 
-.map-marker div.arrow {
-  position: relative;
-  border-style: solid;
-  border-color: var(--icon-borde) transparent transparent transparent;
-  border-width: 10px 6px 0 6px; /*Arrow w/h is defined by the borders*/
-  left: 12px; /*(Marker width - arrow width)/2*/
-  width: 0px; height: 0px;
-}
+<body>
+  <noscript>
+    <strong class="noprint">We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without
+        JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <style>
+    :root {
+      --icon-borde: rgb(156, 156, 0);
+      --icon-bg: rgb(252, 252, 71);
+    }
+
+    /*General marker style*/
+    .map-marker {
+      position: relative;
+      text-align: center;
+      font-weight: bold;
+      background: var(--icon-borde);
+      width: 34px;
+      height: 34px;
+      border-radius: 5px;
+      margin-top: -46px;
+      /*Shift by arrow top+height*/
+      margin-left: -17px;
+      /*Shift by half the marker width*/
+    }
+
+    .map-marker div.arrow {
+      position: relative;
+      border-style: solid;
+      border-color: var(--icon-borde) transparent transparent transparent;
+      border-width: 10px 6px 0 6px;
+      /*Arrow w/h is defined by the borders*/
+      left: 12px;
+      /*(Marker width - arrow width)/2*/
+      width: 0px;
+      height: 0px;
+    }
 
 
-.map-marker div.icon {
-  position: relative;
-  overflow: hidden;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-color: rgb(255, 255, 254);
-  width: 32px; /*Same as marker width*/
-  height: 32px; /*Same as marker height*/
-  line-height: 32px;
-  font-size: 12px;
-  border-radius: 4px;
-  margin-left: 1px;
-  margin-top: 1px;
-}
-    </style>
-    <!-- built files will be auto injected -->
-  </body>
+    .map-marker div.icon {
+      position: relative;
+      overflow: hidden;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: rgb(255, 255, 254);
+      width: 32px;
+      /*Same as marker width*/
+      height: 32px;
+      /*Same as marker height*/
+      line-height: 32px;
+      font-size: 12px;
+      border-radius: 4px;
+      margin-left: 1px;
+      margin-top: 1px;
+    }
+
+    .manzana-marker .icon {
+      padding: 1px 4px 1px 4px;
+      border-radius: 2px;
+      background-color: rgb(255, 255, 254);
+      border: 1px solid var(--icon-borde);
+      margin-top: -.5em;
+      margin-left: -.5em;
+      transform: rotate(18deg);
+    }
+
+    .manzana-marker-center {
+      background-color: var(--icon-bg);
+      border: 1px solid var(--icon-borde);
+      font-weight: bold;
+
+    }
+  </style>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

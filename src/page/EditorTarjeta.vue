@@ -71,6 +71,12 @@
                     class="p-button-outlined"
                     @click="clearLimits()"
                   />
+                  
+                  <Button
+                    label="Quitar Ultimo"
+                    class="p-button-outlined"
+                    @click="removeLastLimit()"
+                  />
                   <Button label="Continuar" class="p-button-outlined" v-bind:disabled="terr.limits.length < 3" @click="step = 2" />
                 </div>
                 <div class="msg text-red-500 mt-3 text-sm" v-show="terr.limits.length < 3">
@@ -80,14 +86,24 @@
               <div v-show="step == 2">
                 <div class="mb-5 line-height-3">
                   <h3>
-                    3. Enumerar manzanas de territorio {{ terr.zona }}{{ terr.numero }}
+                    3. Definir centro y enumerar manzanas de territorio {{ terr.zona }}{{ terr.numero }}
                   </h3>
+                  <p>
+                    Tienes que <b>hacer click sobre el mapa</b> en el centro del
+                    territorio {{ terr.zona }}{{ terr.numero }}. Veras que al hacer click
+                    aparece {{ terr.zona }}{{ terr.numero }}.
+                  </p>
                   <p>
                     Tienes que <b>hacer click sobre el mapa</b> en cada manzana (o porcion
                     en caso de no contener manzanas completas) del territorio
                     {{ terr.zona }}{{ terr.numero }}. Veras que al hacer click van
                     apareciendo numeros.
                   </p>
+                  <h4>Elige un color para los numeros</h4>
+                  <div class="w-50">
+                    <ColorPicker v-model="color" />
+                    <!-- {{ terr.color }} -->
+                  </div>
                   <p>
                     Si te equivocas a quieres volver a enumerar solo preciona el boton
                     "Limpiar Mapa".
@@ -107,6 +123,11 @@
                     class="p-button-outlined"
                     @click="clearMzNumbers()"
                   />
+                  <Button
+                    label="Quitar Ultimo"
+                    class="p-button-outlined"
+                    @click="removeLastMz();"
+                  />
                   <Button label="Continuar" class="p-button-outlined" v-bind:disabled="terr.mzNumbers.length < 1" @click="step = 3" />
                 </div>
 
@@ -125,15 +146,18 @@
                     <div class="col-12">
                       <label>Punto de Encuentro {{ index + 1 }} </label>
                       <div class="p-inputgroup pt-1">
-                        <InputText placeholder="Punto de encuentro" v-model="item.name" maxlength="2"/>
+                        <InputText placeholder="Punto de encuentro" v-model="item.name"/>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="flex justify-content-between">
                   <Button label="Atras" class="p-button-outlined" @click="step = 2" />
-                  
-                  
+                  <Button
+                    label="Quitar Ultimo"
+                    class="p-button-outlined"
+                    @click="terr.removeLastPE()"
+                  />
                   <Button label="Continuar" class="p-button-outlined"  @click="step = 4" />
                 </div>
               </div>
@@ -144,6 +168,7 @@
                   <div class="msg text-red-500 text-sm" >
                     <b>Recuerda leer atentamente las instrucciones.</b>
                   </div>
+                  
                   <h4>
                     Elige que <b>forma</b> se adapta mas al territorio {{ terr.zona }}{{ terr.numero }}.
                   </h4>
@@ -211,7 +236,9 @@
         <MapaBase
           v-if="step != 4"
           class="map"
+          :terrID="terr.zona + terr.numero"
           :center="terr.center"
+          :color="terr.color"
           @mapClick="onMapClick"
           @mapMoveend="onMapMoveend"
           @zoomstart="zoomstart"
@@ -226,6 +253,7 @@
           :rotate="terr.angle"
           :zoom="terr.zoom"
           :mzNumbers="terr.mzNumbers"
+          :color="terr.color"
           listen="true"
           :limits="terr.limits"
           :terr="terr"
@@ -238,11 +266,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import ColorPicker from 'primevue/colorpicker';
+import { ref, onMounted, computed } from "vue";
 import { useTerritoriosStore } from "@/store/territorios";
 import { useTerritorioStore } from "@/store/territorio";
 import { useMapStore } from "@/store/map";
 import { useMzNumbers } from "@/store/map/mzNumber";
+import { terrColors } from "@/composables/color";
+
 
 const territorios = useTerritoriosStore();
 const terr = useTerritorioStore();
@@ -251,11 +282,20 @@ const mzNumbers = useMzNumbers();
 const angle = ref(0)
 const step = ref(0);
 
+const { color } = terrColors(terr);
+
 onMounted(() => {
   // console.log("terr.center", terr.center)
   if (!terr.center) terr.$patch({ center: m.getCenter() });
 })
 
+const puntoEncuentro = computed({
+  get: () => terr.puntoEncuentro,
+  set(val) {
+    console.log("set puntoEncuentro", val)
+    terr.$patch({ puntoEncuentro: val });
+  },
+})
 var polTerr;
 const clearLimits = () => {
   // terr.limits.value = []
@@ -263,10 +303,18 @@ const clearLimits = () => {
   if (polTerr) m.map.removeLayer(polTerr);
   polTerr = [];
 };
+const removeLastLimit = async () => {
+   await terr.$patch({ limits: terr.limits.slice(0, -1) });
+  configureLimit()
+};
 
 const clearMzNumbers = () => {
   terr.$patch({ mzNumbers: [] });
   mzNumbers.$patch({ mzNumbers: [] });
+};
+const removeLastMz = () => {
+  terr.$patch({ mzNumbers: terr.mzNumbers.slice(0, -1) });
+  mzNumbers.$patch({ mzNumbers: mzNumbers.mzNumbers.slice(0, -1) });
 };
 
 const onMapClick = (e) => {
@@ -321,7 +369,7 @@ window.addEventListener('storage',function(e){
 });
 
  const configurePuntoEncuentro = async (data) => {
-  console.log("dconfigurePuntoEncuentro", data.latlng)
+  // console.log("dconfigurePuntoEncuentro", data.latlng)
   
   let address = await getStreetName(data.latlng)
   
@@ -338,9 +386,14 @@ var puntoEncuentroMap
 function renderPuntoEncuentro() {
   if (puntoEncuentroMap) puntoEncuentroMap.remove()
   let  list = []
-  console.log("m.iconMarker", m.iconMarker)
+  const icon = L.icon({
+      iconUrl: `/pe.png`,
+      iconSize: [32, 32],
+      alt: 'Punto de Encuentro'
+    })
   for ( let i in terr.puntoEncuentro){
-    list.push(m.L.marker(terr.puntoEncuentro[i].latlng, { icon: m.iconMarker[0] }))
+    // console.log("renderPuntoEncuentro", terr.puntoEncuentro[i].latlng)
+    list.push(m.L.marker(terr.puntoEncuentro[i].latlng, { icon }))
   }
   puntoEncuentroMap = L.layerGroup(list).addTo(m.map);
 }
