@@ -24,6 +24,10 @@ const props = defineProps({
     type: Object,
     default: null
   },
+  saveCenter: {
+    type: Boolean,
+    default: true
+  },
 })
 var numbers = []
 
@@ -40,22 +44,32 @@ const center = computed({
 const emit = defineEmits(['mapClick', 'mapMoveend', 'mapMoveend', 'zoomstart', 'zoomend', 'ready'])
 
 onMounted(() =>{
-  let service = m.L.map("mapContainer").setView(center.value, 17)
+  let service = m.L.map("mapContainer", {scrollWheelZoom: false}).setView(center.value, 17)
   m.setMap(service);
-  m.L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(m.map);
+  m.setTileLayer()
   m.map.on("click", function (e) {
     emit("mapClick", e)
+  });
+  var keydown = false
+  m.map.on("keydown", function (e) {
+    if (keydown) return
+    keydown = true
+    m.map.scrollWheelZoom.enable();
+  });
+  m.map.on("keyup", function (e) {
+    keydown = false
+    m.map.scrollWheelZoom.disable();
   });
   m.map.on("moveend", function (e) {
     emit("mapMoveend", e)
     let data = m.map.getBounds().getCenter()
     // console.log(data)
+    if (props.saveCenter)
     center.value = [data.lat, data.lng];
   });
   m.map.on("zoomstart", function (e) {
+    console.log("zoomstart", e)
+
     emit("zoomstart", e)
     for ( let i in numbers) {
       m.map.removeLayer(numbers[i])

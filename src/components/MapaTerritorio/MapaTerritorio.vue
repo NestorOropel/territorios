@@ -2,7 +2,7 @@
   <div ref="parent" class=" flex align-items-center justify-content-center" :class="{ back: listen != 'false' }" :style="style">
     <div class="shape" :style="shapeStyle">
       <!-- puntoEncuentro='+terr.puntoEncuentro+'& -->
-      <iframe v-if="ready" :src="'/mapa.html?center='+center+'&listen='+listen+'&zoom='+activeZoom+'&limits='+JSON.stringify(limits)+'&mzNumbers='+JSON.stringify(mzNumbers)" frameborder="0" :style="iframeStyle"></iframe>
+      <iframe v-if="ready" :src="'/mapa.html?center='+center+'&listen='+listen+'&zoom='+activeZoom+'&limits='+JSON.stringify(limits)+'&mzNumbers='+JSON.stringify(mzNumbers)" frameborder="0" id="map-iframe" :style="iframeStyle"></iframe>
     </div>
   </div>
 </template>
@@ -16,6 +16,10 @@ const props = defineProps({
   mapConfig: Object,
   mzNumbers: Array,
   terr: Object,
+  color: {
+    type: Object,
+    default: null
+  },
   listen: {type: String, default: 'false'},
   shape: { type: Number, default: 0 },
   rotate: { type: Number, default: 0 },

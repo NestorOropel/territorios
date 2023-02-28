@@ -4,15 +4,19 @@
       <div class="pr-2">
         <MultiSelect v-model="zonesComputed" :options="territorios.state.filteredZones" placeholder="Seleccione zonas a mostrar" />
       </div>
-      <ToggleButton v-model="showMza" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Manzanas" offLabel="Manzanas" />
-      <ToggleButton v-model="showCenter" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Centro Territorio" offLabel="Centro Territorio" />
-      <ToggleButton v-model="showLines" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Lineas" offLabel="Lineas" />
+      <ToggleButton class="mr-2" v-model="showMza" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Manzanas" offLabel="Manzanas" />
+      <ToggleButton class="mr-2" v-model="showCenter" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Centro Territorio" offLabel="Centro Territorio" />
+      <ToggleButton class="mr-2" v-model="showLines" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Lineas" offLabel="Lineas" />
+      <Dropdown  class="mr-2" v-model="m.tile" :options="m.layers"  placeholder="Tipo de Mapa" @change="m.setTileLayer" />
+      <Dropdown  class="mr-2" v-model="size" :options="tamaño" optionLabel="label" optionValue="value"  placeholder="Tamaño" @change="setSize" />
+
     </div>
   </div>
 </template>
 
 <script setup>
 import ToggleButton from 'primevue/togglebutton';
+import Dropdown from 'primevue/dropdown';
 import { ref, onMounted, defineProps, watch, defineEmits, computed } from 'vue'
 import { useTerritoriosStore } from "@/store/territorios";
 import { useTerritorioStore } from "@/store/territorio";
@@ -26,7 +30,25 @@ const m = useMapStore();
 const mzNumbers = useMzNumbers();
 const terrLimit = useTerrLimit();
 
+const size = ref(null)
+
+
+// const updateMap = (tile) => {
+//   console.log("tile", tile, tileLayer.value)
+//   if (!tile.value) return
+//   m.setTileLayer()
+// }
+
+
+
 const activeZones = ref([])
+const tamaño = ref([
+  {label:'Normal', value: '' },
+  {label:'x2', value: 'height: 200vh; width: 200vw;' },
+  {label:'x3', value: 'height: 300vh; width: 300vw;' },
+  {label:'x4', value: 'height: 400vh; width: 400vw;' },
+  {label:'x5', value: 'height: 500vh; width: 500vw;' },
+])
 
 const zonesComputed = computed({
   get() {
@@ -38,9 +60,15 @@ const zonesComputed = computed({
   }
 })
 const showCenter = ref(false)
+const tileLayer = ref(null)
 const showMza = ref(true)
 const showLines = ref(false)
 
+
+const emit = defineEmits(['setSize'])
+const setSize = () => {
+  emit("setSize", size)
+}
 
 var activeGroup;
 var activeMarkers;

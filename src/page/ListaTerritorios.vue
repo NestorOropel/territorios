@@ -26,8 +26,6 @@
             </div>
             <h2>{{ item.zona }}{{ item.numero }}</h2>
           </div>
-          <!-- <p>{{ item.mapConfig }} {{ item.zoom }}</p> -->
-          
           
           <div class="detalle" v-if="mode== 'map'">
             <MapaTerritorio

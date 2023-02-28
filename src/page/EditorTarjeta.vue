@@ -9,6 +9,14 @@
               Tarjeta de Territorio {{ terr.zona }}{{ terr.numero }}
             </h1>
             <TarjetaTerritorio v-show="step < 4" />
+            <div class="flex">
+              <Button label="Limites" class="p-button-outlined p-button-secondary mr-2" v-bind:disabled="!terr.numero || terr.numero < 1" @click="step = 1" />
+              <Button label="Color y Manzanas" class="p-button-outlined p-button-secondary mr-2" v-bind:disabled="terr.limits.length < 3" @click="step = 2" />
+              <Button label="Punto Encuentro" class="p-button-outlined p-button-secondary mr-2" v-bind:disabled="terr.mzNumbers.length < 1" @click="step = 3" />
+              <Button label="Diseño" class="p-button-outlined p-button-secondary mr-2" v-bind:disabled="terr.mzNumbers.length < 1" @click="step = 4" />
+              <Button label="Guardar Cambios" class="p-button-outlined p-button-secondary mr-2" v-bind:disabled="terr.mzNumbers.length < 1" @click="guardar()" />
+            </div>
+            
           </div>
           <div>
             <h5 class="text-left  text-red-700">Instrucciones</h5>
@@ -245,6 +253,7 @@
           @zoomend="zoomend"
           @ready="ready"
         ></MapaBase>
+          <!-- style="width: 100vw; height: 100vw" -->
         <MapaTerritorio
           v-if="step == 4"
           class="map"
@@ -284,9 +293,12 @@ const step = ref(0);
 
 const { color } = terrColors(terr);
 
+
+
 onMounted(() => {
   // console.log("terr.center", terr.center)
   if (!terr.center) terr.$patch({ center: m.getCenter() });
+  if (terr.numero > 0) step.value = 1
 })
 
 const puntoEncuentro = computed({

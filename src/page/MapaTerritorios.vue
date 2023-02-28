@@ -4,7 +4,7 @@
       <div class="header">
         <h1>Mapa de Territorio</h1>
         <div class="options">
-          <MapControl ref="control" />
+          <MapControl ref="control" @setSize="setSize"   />
         </div>
       </div>
       <div class="grid grid-nogutter max-page w-full">    
@@ -12,11 +12,13 @@
           <MapaBase
             v-if="step != 3"
             class="map"
+            :style="size"
             :center="terr.center"
             @mapClick="onMapClick"
             @mapMoveend="onMapMoveend"
             @zoomstart="zoomstart"
             @zoomend="zoomend"
+            :saveCenter="false"
             @ready="ready"
           ></MapaBase>
         </div>
@@ -39,7 +41,13 @@ const mzNumbers = useMzNumbers();
 const angle = ref(0)
 const step = ref(0);
 const control = ref('');
+const size = ref('');
 
+const setSize = (data) => {
+  step.value = 3
+  size.value = data.value
+  setTimeout(()=> { step.value = 0 }, 200)
+}
 
 var polTerr;
 const clearLimits = () => {

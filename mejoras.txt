@@ -1,0 +1,19 @@
+Version usada de Leaflet
+1.7
+
+MEJORAS POSIBLES
+
+
+
+
+Estilo de Mapa
+https://leaflet-extras.github.io/leaflet-providers/preview/
+
+Sombra
+https://github.com/ebrelsford/Leaflet.snogylop
+https://stackoverflow.com/questions/65212549/leaflet-invert-when-there-are-multiple-polygons
+
+
+MEJORAS HECHAS
+
+Botones al editar

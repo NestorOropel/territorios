@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="./css/leaflet.css" />
     <script src="./js/leaflet.js"></script>
-
+    
     <!-- Load leaflet.snogylop -->
     <script src="./js/leaflet.snogylop.js"></script>
     <script src="./js/iconsNumbers.js"></script>
@@ -40,6 +40,7 @@
     
     
     <script>
+      
       //height
       let h = document.documentElement.clientHeight;
       document.getElementById("map").style.height = h + "px"
@@ -51,7 +52,7 @@
 
       let { center, limits, zoom, listen, mzNumbers, puntoEncuentro } = params;
       center = JSON.parse('['+center+']');
-      console.log("MAP params", params)
+      // console.log("MAP params", params)
       limits = JSON.parse(limits)
       limits = [...limits, limits[0]]
       mzNumbers = JSON.parse(mzNumbers)
@@ -63,11 +64,32 @@
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
-      L.polyline(limits, {
-        color: 'red',
-        weight: 3,
-        opacity: 0.5,
-        smoothFactor: 1
+
+      // L.polyline(limits, {
+      //   color: 'red',
+      //   weight: 3,
+      //   opacity: 0.5,
+      //   smoothFactor: 1
+      // }).addTo(map);
+
+      var poly = L.polygon(limits);
+
+      var selectedArea = L.geoJson(poly.toGeoJSON(), {
+        invert: true,
+        
+        color: 'grey',
+        weight: 1,
+        opacity: 0.9,
+        smoothFactor: 2,
+        fillOpacity:.7,
+        fill: 'grey',
+      
+      //   worldLatLngs: [
+      //     L.latLng([90, 360]),
+      //     L.latLng([90, -180]),
+      //     L.latLng([-90, -180]),
+      //     L.latLng([-90, 360])
+      // ]
       }).addTo(map);
 
       if (listen == 'true') {
