@@ -64,10 +64,16 @@
 import { ref } from 'vue'
 import { useRouterStore } from '@/store/router'
 import { useTerritoriosStore } from '@/store/territorios'
+import { useSalidaStore } from "@/store/useSalidaStore";
+import { useTrabajoStore } from "@/store/useTrabajoStore";
 import { useMapStore } from '@/store/map'
 const m = useMapStore()
 const territorios = useTerritoriosStore()
 const route = useRouterStore()
+
+const trabajo = useTrabajoStore()
+const salida = useSalidaStore();
+
 const fileInput = ref('null')
 const newDoc = () => {
   territorios.$patch({list: [], activeId: null})
@@ -91,8 +97,22 @@ const fileChange = (e) => {
           }
         }
       }
-      territorios.$patch({list: data.territorios})
+      territorios.$patch({
+        list: data.territorios || [],
+        puntoEncuentro: data.puntoEncuentro || [],
+      })
       m.$patch({center: data.center || [-31.5653073, -68.5638051]})
+      if (data.trabajo){
+        trabajo.$patch({data: data.trabajo})
+      }
+      if (data.salida){
+        salida.$patch({
+          horarios: data.salida.horarios,
+          conductores: data.salida.conductores,
+          list: data.salida.list,
+          history: data.salida.history,
+        })
+      }
       route.$patch({page: "listaTerritorio"});
     }
     reader.onerror = function (err) {
@@ -104,6 +124,7 @@ const fileChange = (e) => {
     alert("Ocurrio un error. Recarga y vuelve a intentar.")
   }
 }
+
 
 </script>
 

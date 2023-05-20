@@ -1,10 +1,17 @@
 <template>
   <div>
     <div class="options flex">
+
       <div class="pr-2">
         <MultiSelect v-model="zonesComputed" :options="territorios.state.filteredZones" placeholder="Seleccione zonas a mostrar" />
       </div>
+      <div class="pr-2">
+        <MultiSelect v-model="terrComputed" :options="territorios.state.filteredTerr" optionLabel="name" placeholder="Seleccione territorio a mostrar" />
+        <!-- {{ territorios.state.filteredTerr }} -->
+        
+      </div>
       <ToggleButton class="mr-2" v-model="showMza" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Manzanas" offLabel="Manzanas" />
+      <ToggleButton class="mr-2" v-model="showMzaNro" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Numeros de Manzanas" offLabel="Numeros de Manzanas" />
       <ToggleButton class="mr-2" v-model="showCenter" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Centro Territorio" offLabel="Centro Territorio" />
       <ToggleButton class="mr-2" v-model="showLines" @change="filter()" onIcon="pi pi-check" offIcon="pi pi-times"  onLabel="Lineas" offLabel="Lineas" />
       <Dropdown  class="mr-2" v-model="m.tile" :options="m.layers"  placeholder="Tipo de Mapa" @change="m.setTileLayer" />
@@ -42,6 +49,7 @@ const size = ref(null)
 
 
 const activeZones = ref([])
+const activeTerr = ref([])
 const tamaño = ref([
   {label:'Normal', value: '' },
   {label:'x2', value: 'height: 200vh; width: 200vw;' },
@@ -59,9 +67,19 @@ const zonesComputed = computed({
     filter()
   }
 })
+const terrComputed = computed({
+  get() {
+    return activeTerr.value
+  },
+  set(val) {
+    activeTerr.value = val
+    filter()
+  }
+})
 const showCenter = ref(false)
 const tileLayer = ref(null)
 const showMza = ref(true)
+const showMzaNro = ref(false)
 const showLines = ref(false)
 
 
@@ -80,8 +98,9 @@ const filter = () => {
     activeGroup.eachLayer(l => activeGroup.removeLayer(l))
   }
   if (activeMarkers) activeMarkers.remove()
-  if (activeZones.value.length === 0) return;
-  let list = territorios.list.filter(item => activeZones.value.indexOf(item.zona) >= 0 )
+  if (activeZones.value.length === 0 && activeTerr.value.length  === 0) return;
+  
+  let list = [ ...territorios.list.filter(item => activeZones.value.indexOf(item.zona) >= 0 ), ...activeTerr.value ]
   let polilines = []
   let numbers = []
   for ( let i in list){
@@ -89,7 +108,6 @@ const filter = () => {
     polilines.push(m.L.polyline([...item.limits, item.limits[0]], m.sectorOption))
     
     if (showCenter.value){
-
       let center = item.mzNumbers[0][0]
       let icon = L.divIcon({
         className: 'manzana-marker ',
@@ -104,10 +122,11 @@ const filter = () => {
       for ( let key in item.mzNumbers){
         if (parseInt(key) === 0) continue;
         // console.log("item.center", item.center)
+        let label = showMzaNro.value ? key : item.zona+item.numero
         let icon = L.divIcon({
           className: 'manzana-marker ',
           iconSize:null,
-          html: `<div class="icon manzana-marker-center" style="font-size: 1em; ${colors}">${item.zona}${item.numero}</div><div class="arrow" />`
+          html: `<div class="icon manzana-marker-center" style="font-size: 1em; ${colors}">${label}</div><div class="arrow" />`
         });
         numbers.push(m.L.marker(item.mzNumbers[key][0], { icon }))
       }

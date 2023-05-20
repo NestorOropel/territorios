@@ -17,10 +17,12 @@
         <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="newPlane" />
         <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
         <Button icon="pi pi-map" title="Mapa de territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'mapaTerritorios'})" />
+        <Button icon="pi pi-chart-line" title="Estadisticas" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'estadisticas'})" />
+        <Button icon="pi pi-briefcase" title="Salidas" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'salidas'})" />
       </div>
       <div class="flex flex-column buttonspace">
-        <Button icon="pi pi-home" class="p-button-outlined p-button-secondary" title="Inicio" @click="route.$patch({page: 'start'})" />
-        <Button icon="pi pi-save" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+        <Button icon="pi pi-cog" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+        <!-- <Button icon="pi pi-power-off" class="p-button-outlined p-button-secondary" title="Inicio" @click="route.$patch({page: 'start'})" /> -->
       </div>
     </div>
     

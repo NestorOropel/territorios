@@ -47,6 +47,8 @@ export const useMapStore = defineStore('mapa', () => {
     return [center.lat, center.lng];
   }
 
+  //http://ivansanchez.gitlab.io/Leaflet.GridLayer.GoogleMutant/demo.html
+
   function setTileLayer(){
     console.log("setTileLayer", tile.value)
     if (tile.value == 'Stadia Alidade Smooth'){

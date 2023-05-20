@@ -5,7 +5,7 @@
       
       <ListaTerritorios v-else-if="route.page == 'print'" :print="true" />
       <div v-else  class="flex">
-        <div class="menu noprint">
+        <div class="menu noprint" v-if="route.page != 'map_viewer'">
           <Menu  />
         </div>
         <div class="flex-1 flex">
@@ -13,6 +13,12 @@
           <DownloadTerritorio v-if="route.page == 'downloadTerritorio'" />
           <ListaTerritorios v-if="route.page == 'listaTerritorio'" />
           <MapaTerritorios v-if="route.page == 'mapaTerritorios'" />
+          <EstadisticasTerritorio v-if="route.page == 'estadisticas'" />
+          <PuntoEncuentro v-if="route.page == 'puntoEncuentro'" />
+          <RegistroTrabajado v-if="route.page == 'registroTrabajado'" />
+          <FormSalidas v-if="route.page == 'salidas'" />
+          
+          <MapaViewer v-if="route.page == 'map_viewer'" />
         </div>
       </div>
     </div>
@@ -21,6 +27,12 @@
 
 <script setup>
 import { useRouterStore } from '@/store/router'
+import MapaViewer from '@/page/MapaViewer.vue'
+import RegistroTrabajado from '@/page/RegistroTrabajado.vue'
+import EstadisticasTerritorio from '@/page/EstadisticasTerritorio.vue'
+import FormSalidas from '@/page/FormSalidas.vue'
+import PuntoEncuentro from './page/PuntoEncuentro.vue'
+
 const route = useRouterStore()
 
 </script>
@@ -52,6 +64,17 @@ body {
 @media print {
     /* Aquí irían tus reglas CSS específicas para imprimir */
     .noprint {
+      display: none !important;
+    }
+
+    .onlyprint {
+      display: block !important;
+    }
+}
+
+@media screen {
+    /* Aquí irían tus reglas CSS específicas para imprimir */
+    .onlyprint {
       display: none !important;
     }
 }

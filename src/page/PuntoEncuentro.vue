@@ -1,26 +1,21 @@
 <template>
-  <div class="px-5 py-2 w-full">
+  <div class="px-5 py-2 w-full text-left">
     <div class="w-full">
       <div class="flex justify-content-between w-full align-items-center">
-        <h1>Lista de territorios</h1>
+        <div>
+          <h1 class="ml-0 pl-0">Lista de Puntos de Encuentro</h1>
+          <p>Solo se listan puntos de encuentros no asignados en los territorios</p>
+        </div>
         <div class="noprint flex">
-          <!-- <SelectButton v-if="!props.print" v-model="mode" :options="modes" optionLabel="value" optionValue="value"
-            dataKey="value" aria-labelledby="custom">
-            <template #option="slotProps">
-              <i :class="slotProps.option.icon"></i>
-            </template>
-          </SelectButton> -->
-          <ImportTerr class="mx-2" />
-          <Button label="Puntos de Encuentro" @click="route.$patch({ page: 'puntoEncuentro' })"  />
-          <Button icon="pi pi-print" class="ml-2" @click="print" />
+          <PuntosDeEncuentro class="mx-2" />
         </div>
       </div>
 
     </div>
     <div class="card">
-      <DataTable :value="territorios.list" :paginator="false" class="p-datatable-customers" showGridlines :rows="30"
+      <DataTable :value="territorios.puntoEncuentro" :paginator="false" class="p-datatable-customers" showGridlines :rows="30"
         dataKey="id" :filters.sync="filters1" filterDisplay="menu"  responsiveLayout="scroll"
-        :globalFilterFields="['zona', 'numero', 'referencia', 'notas']">
+        :globalFilterFields="['lugar']">
         <template #header>
           <div class="flex justify-content-between noprint">
             <Button type="button" icon="pi pi-filter-slash" label="Limpiar" class="p-button-outlined noprint"
@@ -34,20 +29,8 @@
         <template #empty>
           Ningun registro encontrado
         </template>
-        <Column field="numero" header="Territorio" :styles="{ 'min-width': '12rem' }">
-          <template #body="{ data }">{{ data.zona }}{{ data.numero }}</template>
-        </Column>
-        <Column field="referencia" header="Referencia" :styles="{ 'min-width': '12rem' }">
-          <template #body="{ data }">{{ data.referencia }}</template>
-        </Column>
-        <Column field="notas" header="Notas" :styles="{ 'min-width': '12rem' }">
-          <template #body="{ data }">{{ data.notas }}</template>
-        </Column>
-        <Column  class="text-right" :styles="{ 'min-width': '12rem' }">
-          <template #body="{ data }">
-            <a :href="getItemUrl(data)" target="_blank" class="btn btn-sm btn-secondary"><Button label="Ver" icon="pi pi-eye" outlined  /></a>
-            <Button label="Editar" class="noprint ml-2"  @click="edit(data)" />
-          </template>
+        <Column field="lugar" header="Punto de Encuentro" :styles="{ 'min-width': '12rem' }">
+          <template #body="{ data }">{{ data.name }}</template>
         </Column>
 
       </DataTable>

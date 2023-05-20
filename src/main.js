@@ -21,6 +21,7 @@ import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import SelectButton from 'primevue/selectbutton';
 import MultiSelect from 'primevue/multiselect';
+import DataTable from "primevue/datatable";
 
 // componentes creados
 import Menu from '@/components/Menu/Menu.vue'
@@ -54,6 +55,7 @@ app
 .component('FileUpload', FileUpload)
 .component('SelectButton', SelectButton)
 .component('MultiSelect', MultiSelect)
+.component('DataTable', DataTable)
 .component('Menu', Menu)
 .component('PageStart', PageStart)
 .component('EditorTarjeta', EditorTarjeta)

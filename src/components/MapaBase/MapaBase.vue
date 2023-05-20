@@ -28,8 +28,13 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  setPoint: {
+    type: Boolean,
+    default: false
+  },
 })
 var numbers = []
+var activePoint = []
 
 const center = computed({
   get() {
@@ -44,11 +49,22 @@ const center = computed({
 const emit = defineEmits(['mapClick', 'mapMoveend', 'mapMoveend', 'zoomstart', 'zoomend', 'ready'])
 
 onMounted(() =>{
-  let service = m.L.map("mapContainer", {scrollWheelZoom: false}).setView(center.value, 17)
+  let service = m.L.map("mapContainer", {scrollWheelZoom: false, zoomSnap: 0.25}).setView(center.value, 17)
   m.setMap(service);
   m.setTileLayer()
   m.map.on("click", function (e) {
+    console.log("props.setPoint", props.setPoint)
     emit("mapClick", e)
+    if (props.setPoint) {
+      activePoint.forEach((e) => {
+        m.map.removeLayer(e)
+      })
+      activePoint = []
+      let icon = m.iconMarker[0];
+      let marker = m.L.marker(e.latlng, { icon: icon }).addTo(m.map);
+      activePoint.push(marker)
+
+    } 
   });
   var keydown = false
   m.map.on("keydown", function (e) {
@@ -132,6 +148,6 @@ const setNumbers = (data) => {
 <style scoped>
 #mapContainer {
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 </style>
