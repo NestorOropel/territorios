@@ -3,11 +3,16 @@ import Chips from 'primevue/chips';
 import Calendar from 'primevue/calendar';
 import Column from "primevue/column";
 import Dropdown from 'primevue/dropdown';
-import Listbox from 'primevue/listbox';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Dialog from 'primevue/dialog';
+import ColorPicker from 'primevue/colorpicker';
 import Divider from 'primevue/divider';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import MapByName from '@/components/MapByName/MapByName.vue';
+import TarjetaTerritorio from '@/page/TarjetaTerritorio.vue';
 import TerritorioSelector from '@/components/TerritorioSelector.vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
@@ -16,11 +21,15 @@ import { useSalidaStore } from '@/store/useSalidaStore';
 import { useTrabajoStore } from '@/store/useTrabajoStore';
 import { useProximaSalida } from '@/composables/useProximaSalida';
 import { useTerritoriosStore } from "@/store/territorios";
+
+import { useTerritorioStore } from "@/store/territorio";
 import { useUrl } from '@/composables/useUrl';
 
 import { ref, onMounted, computed, watch } from 'vue'
 
 const territorios = useTerritoriosStore();
+
+const territorio = useTerritorioStore();
 const { getItemUrl } = useUrl();
 const salida = useSalidaStore();
 const trabajo = useTrabajoStore();
@@ -136,9 +145,16 @@ watch( form.value, async (val) => {
     }
   }
 }, { immediate: true })
-
+const visible = ref(false)
+const terrWork = (item) => {
+  visible.value = true
+  territorio.$patch(item)
+}
 </script>
 <template>
+  <Dialog v-model:visible="visible"  modal header="Registro de trabajo" :style="{ width: '80vw' }">
+    <TarjetaTerritorio />
+  </Dialog>
   <div class="grid p-4 text-left align-content-start w-full">
     <div class="col-12 flex justify-content-between">
       <!-- {{ territoriosInfo }} -->
@@ -199,7 +215,17 @@ watch( form.value, async (val) => {
         </Column>
         <Column field="territorios" header="Territorios" :styles="{ 'min-width': '12rem' }">
           <template #body="{ data }">
-            <a v-for="(item, k) in data.territorios" :key="k" class="ml-2 terr" :href="getItemUrl(territorios.data[item], trabajo.data[item].manzanasPendientes)" target="_blank">{{ item }} </a>
+            <div class="territorio-salida">
+              <a v-for="(item, k) in data.territorios" :key="k" class="ml-2 terr" :href="getItemUrl(territorios.data[item], trabajo.data[item].manzanasPendientes)" target="_blank">{{ item }} </a>
+            </div>
+            <!-- <i class="pi pi-arrow-circle-right"></i> -->
+          </template>
+        </Column>
+        <Column :styles="{ 'min-width': '12rem' }" header="Registrar" headerClass="noprint" bodyClass="noprint">
+          <template #body="{ data }">
+            <div class="territorio-salida">
+              <a v-for="(item, k) in data.territorios" :key="k" class="ml-2 terr2" @click="terrWork(territorios.data[item])">{{ item }} </a>
+            </div>
             <!-- <i class="pi pi-arrow-circle-right"></i> -->
           </template>
         </Column>
@@ -209,8 +235,11 @@ watch( form.value, async (val) => {
         
         <Column :styles="{ 'min-width': '12rem' }" headerClass="noprint" bodyClass="noprint">
           <template #body="{ data }">
-            <!-- <Button type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-outlined noprint" @click="salida.edit(data)" /> -->
-            <Button type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" @click="deleteItem(data)" />
+            <div class="flex gap-2">
+
+              <Button type="button" icon="pi pi-clone" tag="Clonar" class="p-button-rounded p-button-success p-button-outlined noprint" @click="form = data" />
+              <Button type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" @click="deleteItem(data)" />
+            </div>
             <!-- {{ data }} -->
           </template>
         </Column>
@@ -263,6 +292,11 @@ watch( form.value, async (val) => {
         <label for="">Notas: </label>
         <InputText v-model="form.notas" />
       </div>
+      <!-- <div class="col-4 flex flex-column ">
+
+        <label class="mb-1">Color: </label>
+        <ColorPicker v-model="form.bgcolor" />
+      </div> -->
       
     </div>
     
@@ -368,6 +402,26 @@ watch( form.value, async (val) => {
     color: #fff  !important;
     padding: .5rem;
     border-radius: .5rem;
+  }
+
+  a.terr2,
+  a.terr2:visited,
+  a.terr2:hover,
+  a.terr2:active
+   {
+    border: 1px solid #1ab31d !important;
+    background: #1ab31d;
+    color: #fff  !important;
+    padding: .5rem;
+    border-radius: .5rem;
+  }
+
+
+  .territorio-salida {
+    max-width: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
   }
   
 </style>

@@ -41,7 +41,7 @@
         <Button title="Estadisticas" class="p-button-secondary" @click="route.$patch({page: 'estadisticas'})">
           <div class="flex flex-column text-center w-full">
             <i class="pi pi-chart-line pb-2"></i>
-            <span class="text-xs">Estadisticas</span>
+            <span class="text-xs">Informes</span>
           </div>
         </Button>
       </div>

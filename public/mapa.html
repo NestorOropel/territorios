@@ -50,9 +50,10 @@
         new URLSearchParams(window.location.search)
       )
 
-      let { center, limits, zoom, listen, mzNumbers, puntoEncuentro } = params;
+      let { center, limits, zoom, listen, mzNumbers, puntoEncuentro, showLimits } = params;
       center = JSON.parse('['+center+']');
-      // console.log("MAP params", params)
+      console.log("MAP params", params)
+
       limits = JSON.parse(limits)
       limits = [...limits, limits[0]]
       mzNumbers = JSON.parse(mzNumbers)
@@ -64,13 +65,8 @@
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
+     
 
-      // L.polyline(limits, {
-      //   color: 'red',
-      //   weight: 3,
-      //   opacity: 0.5,
-      //   smoothFactor: 1
-      // }).addTo(map);
 
       var poly = L.polygon(limits);
 
@@ -91,6 +87,15 @@
       //     L.latLng([-90, 360])
       // ]
       }).addTo(map);
+
+      if (showLimits === '1') {
+        L.polyline(limits, {
+          color: 'black',
+          weight: 4,
+          opacity: 0.5,
+          smoothFactor: 1
+        }).addTo(map);
+      }
 
       if (listen == 'true') {
         map.on("moveend", function (e) {

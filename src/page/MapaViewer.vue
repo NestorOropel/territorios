@@ -35,17 +35,28 @@
 
 <template>
   <div class="grid grid-nogutter align-content-start text-left viewer">
-    <div class="col-12 title">
-      <div class="pt-2 px-4 pb-2 lg:px-2">
-        <h1 class="m-0 p-0 font-light">{{ item.zona }}{{ item.numero }}</h1>
-        <h2 class="m-0 p-0 text-sm">{{ item.referencia }}</h2>
-        <div class="text-xs">
-          {{ item.notas }}
+    <div class="col-12 grid grid-nogutter title">
+
+      <div class="col-6 pt-2 px-4 pb-2 lg:px-2 flex justify-content-between">
+        <div>
+          <h1 class="m-0 p-0 font-light">{{ item.zona }}{{ item.numero }}</h1>
+          <h2 class="m-0 p-0 text-sm">{{ item.referencia }}</h2>
+          <div class="text-xs">
+            {{ item.notas }}
+          </div>
+          
+        </div>
+        <div>
+          <img src="/north.png" class="w-4rem">
         </div>
       </div>
     </div>
-    <div class="col-12 lg:col-6">
-      <iframe :src="'/mapa.html?center='+item.center+'&zoom='+item.zoom+'&limits='+JSON.stringify(item.limits)+'&mzNumbers='+JSON.stringify(item.mzNumbers)" frameborder="0" id="map-iframe"></iframe>
+    <div class="col-12 lg:col-6 px-1">
+      
+      <iframe :src="'/mapa.html?showLimits=1&center='+item.center+'&zoom='+item.zoom+'&limits='+JSON.stringify(item.limits)+'&mzNumbers='+JSON.stringify(item.mzNumbers)" frameborder="0" id="map-iframe"></iframe>
+      <p class="text-red-600 text-sm">
+            * Los nombres solo son de referencía, el territorio no es por barrio. El territorio son todas las cuadras numeradas que se muestran en el mapa dentro de la linea negra.
+          </p>
     </div>
     <div class="col-12 lg:col-6 px-4 pb-6">
       
@@ -84,7 +95,7 @@
 
 <style scoped>
 .title {
-  max-height: 5em;
+  /* max-height: 5em; */
   
 }
  .viewer {

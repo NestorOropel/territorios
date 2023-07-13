@@ -28,12 +28,20 @@
 
   const trabajo = useTrabajoStore();
   const terr = useTerritoriosStore();
+  const changeTab = (e) => {
+
+    if (e === 1) {
+      trabajo.setTodos();
+    } else {
+      trabajo.getIniciados();
+    }
+  };
 </script>
 
 <template>
   
-<TabView>
-    <TabPanel :header="`Iniciados ${ trabajo.iniciados.length } / ${terr.list.length}`">
+<TabView @update:activeIndex="changeTab">
+    <TabPanel :header="`Iniciados (${ trabajo.iniciados.length })`">
         <div class="grid grid-nogutter">
           <div class="col-auto territorio" v-for="(item, index) in trabajo.iniciados" :key="index" @click="selectTerritorio(item.territorio)">
             <div>
@@ -45,16 +53,19 @@
           </div>
         </div>
     </TabPanel>
-    <TabPanel header="Finalizados">
+    <TabPanel :header="`Todos (${terr.list.length})`">
+      <div class="mb-2">Ordenados por fecha en que se trabajo, primeros los que se completaron hace mas tiempo.</div>
       <div class="flex flex-wrap">
-          <div class="flex-1 territorio" v-for="(item, index) in trabajo.terminados" :key="index" @click="selectTerritorio(item.territorio)">
-            <div>
+          <div class="flex-1 territorio flex flex-column justify-content-between" v-for="(item, index) in trabajo.todos" :key="index" @click="selectTerritorio(item.territorio)">
+            <!-- <div class="flex flex-column justify-content-between"> -->
               <h2>{{ item.territorio }}</h2>
               <h4>{{ terr.data[item.territorio].referencia }}</h4>
               <!-- <p>Ultimo Trabajo: </p>   -->
-              <h5>{{ item.ultimoFin ? trabajo.getDate(item.ultimoFin) : "Sin Registro" }}</h5>
+              <h5 v-if="item.ultimoInicio || item.ultimoFin" class="text-blue-300">
+                {{trabajo.getDate(item.ultimoInicio)}} a {{trabajo.getDate(item.ultimoFin, 'pendiente')}}
+              </h5>
               <p>Pendientes: {{ item.manzanasPendientesTotal }}</p>
-            </div>
+            <!-- </div> -->
           </div>
         </div>
     </TabPanel>
@@ -68,7 +79,7 @@
   text-align: center;
   cursor: pointer;
 }
-.territorio > div {
+.territorio {
   padding: 1rem;
   min-width: 10rem;
 }
