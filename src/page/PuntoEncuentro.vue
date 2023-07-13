@@ -46,7 +46,7 @@ import { useRouterStore } from "@/store/router";
 import { useTerritoriosStore } from "@/store/territorios";
 import { useTerritorioStore } from "@/store/territorio";
 import { useUrl } from "@/composables/useUrl";
-import ImportTerr from "@/components/ImportTerr.vue";
+// import ImportTerr from "@/components/ImportTerr.vue";
 import PuntosDeEncuentro from "@/components/PuntosDeEncuentro.vue";
 // import { ref } from 'vue'
 const territorios = useTerritoriosStore();

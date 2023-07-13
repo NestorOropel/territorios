@@ -50,9 +50,9 @@
           <li>No es información que necesite estar diponible para muchos usuarios.</li>
         </ul>
 
-        <p class="text-xs">
+        <!-- <p class="text-xs">
           Codigo fuente: <a href="https://github.com/NestorOropel/territorios" target="blank" >https://github.com/NestorOropel/territorios</a>
-        </p>
+        </p> -->
         
       </div>
   </div>

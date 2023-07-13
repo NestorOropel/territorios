@@ -22,6 +22,7 @@ import FileUpload from 'primevue/fileupload';
 import SelectButton from 'primevue/selectbutton';
 import MultiSelect from 'primevue/multiselect';
 import DataTable from "primevue/datatable";
+import ConfirmationService from 'primevue/confirmationservice';
 
 // componentes creados
 import Menu from '@/components/Menu/Menu.vue'
@@ -44,7 +45,30 @@ pinia.use(resetStore)
 const app = createApp(App);
 
 app
-.use(PrimeVue)
+.use(PrimeVue, {
+  locale: {
+    dateIs: 'Fecha es',
+    dateIsNot: 'Fecha no es',
+    dateBefore: 'Fecha antes de',
+    dateAfter: 'Fecha despues de',
+    dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+    dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+    dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+    monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Augosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    today: 'Hoy',
+    matchAll: 'Coincidir todo',
+    matchAny: 'Coincidir alguno',
+    addRule: 'Agregar regla',
+    removeRule: 'Remover regla',
+    apply: 'Aplicar',
+    clear: 'Limpiar',
+    accept: 'Si',
+    reject: 'No',
+      //...
+  }
+})
+.use(ConfirmationService)
 .use(pinia)
 .component('InputText', InputText)
 .component('InputNumber', InputNumber)

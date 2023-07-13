@@ -1,26 +1,50 @@
-
+import { useRouterStore } from "@/store/router";
 const url = location.origin;
 export const useUrl = () => {
+  const route = useRouterStore();
+
   // get url with object item in query
-  const getItemUrl = (item) => {
-    // console.log("getItemUrl", item)
-    return `${url}/map?item=${encodeURIComponent(JSON.stringify(getArrayItem(item)))}`
+  const getItemUrl = (item, pendiente) => {
+    // console.log("getItemUrl", item, pendiente)
+    const itemUrl = JSON.parse(JSON.stringify(item));
+    delete itemUrl.puntoEncuentro;
+    delete itemUrl.uuid;
+    if (pendiente) {
+      itemUrl.pendiente = pendiente;
+    }
+
+    // console.log("itemurl", itemUrl)
+
+    return `${url}/map?item=${encodeURIComponent(JSON.stringify(getArrayItem(itemUrl)))}`
   }
 
   const getArrayItem = (item) => {
-    const { numero, zona, center, color, angle, zoom, mzNumbers, referencia, limits, notas } = item;
-    const arrItem = [numero, zona, center, [color.backgroundColor, color.color], angle, zoom, mzNumbers, referencia, limits, notas];
+    const { numero, zona, center, color, angle, zoom, mzNumbers, referencia, limits, notas, pendiente } = item;
+    const arrItem = [numero, zona, center, [color.backgroundColor, color.color], angle, zoom, mzNumbers, referencia, limits, notas, pendiente];
     return arrItem;
   }
 
   const getItemFromQuery = () => {
     // console.log("getItemFromQuery", window.location)
-    const query = new URLSearchParams(window.location.search);
-    // console.log("query", query.get('item'))
-    const item = JSON.parse(query.get('item'));
-    const [numero, zona, center, color, angle, zoom, mzNumbers, referencia, limits, notas] = item;
+
+    let query = window.location.href.split('map?item=')[1];
+    query = decodeURIComponent(query);
+    // console.log("query", query)
+
+    let item = false;
+    try {
+      item = JSON.parse(query);
+    }
+    catch (error) {
+      console.log('no json', error)
+    }
+    if (!item) {
+      route.$patch({page: 'listaTerritorio'})
+      return {};
+    }   
+    const [numero, zona, center, color, angle, zoom, mzNumbers, referencia, limits, notas, pendiente] = item;
     const objItem = {
-      numero, zona, center, color: { backgroundColor: color[0], color: color[1] }, angle, zoom, mzNumbers, referencia, limits, notas
+      numero, zona, center, color: { backgroundColor: color[0], color: color[1] }, angle, zoom, mzNumbers, referencia, limits, notas, pendiente
     }
     return objItem;
   }
@@ -38,9 +62,22 @@ export const useUrl = () => {
   }
 
   const getInforme = () => {
-    const query = new URLSearchParams(window.location.search);
-    const data = JSON.parse(query.get('data'));
-    if (!data) return {};
+    // console.log("getInforme", window.location)
+    let query = window.location.href.split('informe?data=')[1];
+    query = decodeURIComponent(query);
+    let data = false;
+    // console.log("data", query)
+    try {
+      data = JSON.parse(query);
+    }
+    catch (error) {
+      console.log('no json', error)
+    }
+    if (!data) {
+      route.$patch({page: 'listaTerritorio'})
+      return {};
+    }  
+    // if (!data) return {};
     const [numero, zona, manzanas, timestamp] = data;
     const objItem = {
       numero, zona, manzanas, timestamp,

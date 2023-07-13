@@ -92,6 +92,16 @@ export const useTerritorioStore = defineStore('territorio', () => {
   }
 },
 {
-  persist: false
+  // persist: false
+  persist: {
+    key: 'x_t',
+    storage: localStorage,
+    paths: [
+      'zona',
+      'numero',
+      'mzNumbers'
+    ],
+    // debug: true,
+  }
 }
 )

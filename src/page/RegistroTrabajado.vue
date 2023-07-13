@@ -2,26 +2,30 @@
   import MapByName from '@/components/MapByName/MapByName.vue';
   import { useTrabajoStore } from '@/store/useTrabajoStore';
   import { useUrl } from '@/composables/useUrl';
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   const { getInforme } = useUrl();
 
   const trabajo = useTrabajoStore();
   const informe = ref(null);
-  const save = () => {
-    for (let mza of informe.value.manzanas) {
-      // console.log("mza", mza)
-      trabajo.setRegistro(informe.value.territorio, mza, informe.value.timestamp);
+  const save = async () => {
+    const manzanas = [...informe.value.manzanas]
+    informe.value = null
+    let params = {
+      territorio: `${terr.zona}${terr.numero}`,
+      manzanas,
+      date: date.value.getTime(),
+      // conductor: conductor.value,
     }
+    await trabajo.setRegistro(params)
   }
-
-  setTimeout( async () => {
-    // const { zona, numero } = getInforme();
+  onMounted(() => {
+    // console.log("informe", informe.value)
     informe.value = getInforme();
-    console.log("informe", informe.value)
-  }, 1000);
+  })
+
 </script>
 <template>
-  <div class="grid w-full py-2">
+  <div class="grid w-full py-2" v-if="informe">
     <!-- {{ trabajo.getInforme() }} -->
     <div class="col-4 informe">
       <h1  class="m-0 p-0">Registro de trabajo en territorio {{informe.zona}}{{informe.numero}}</h1>
@@ -39,7 +43,8 @@
     </div>
 
     <div class="col-8">
-      <MapByName :zona="informe.zona" :numero="informe.numero" classMap="" />
+      <!-- {{ informe }} -->
+      <MapByName v-if="informe" :zona="informe.zona" :numero="informe.numero" classMap="" />
     </div>
   </div>
 </template>

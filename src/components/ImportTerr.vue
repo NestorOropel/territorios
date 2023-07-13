@@ -42,5 +42,5 @@ const fileChange = (e) => {
 
 </script>
 <template>
-  <FileUpload ref="fileInput" chooseLabel="Importar" chooseIcon="pi pi-file-import" uploadIcon="pi pi-file-import" mode="basic" name="file" accept=".territorio,application/json" @select="fileChange" />
+  <FileUpload ref="fileInput" chooseLabel="Importar"  chooseIcon="pi pi-file-import" uploadIcon="pi pi-file-import" mode="basic" name="file" accept=".territorio,application/json" @select="fileChange"  />
 </template>

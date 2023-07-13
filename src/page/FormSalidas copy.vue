@@ -12,18 +12,15 @@ import TerritorioSelector from '@/components/TerritorioSelector.vue';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 import { useSalidaStore } from '@/store/useSalidaStore';
-
-import { useTrabajoStore } from '@/store/useTrabajoStore';
 import { useProximaSalida } from '@/composables/useProximaSalida';
 import { useTerritoriosStore } from "@/store/territorios";
 import { useUrl } from '@/composables/useUrl';
 
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const territorios = useTerritoriosStore();
 const { getItemUrl } = useUrl();
 const salida = useSalidaStore();
-const trabajo = useTrabajoStore();
 const value = ref(null);
 const form = ref({});
 const showForm = ref(true);
@@ -98,15 +95,12 @@ onMounted(() => {
   }
 })
 
-
-
 const puntosEncuentro = computed(() => {
   // console.log('puntosEncuentro', form.value.territorios);
   let otros = [];
   for (let i in form.value.territorios) {
     let name = form.value.territorios[i];
-    console.log("name", name, territorios.data)
-    let info = territorios.data[name];
+    let info = territorios.getTerritorioById(name)
     if (info.puntoEncuentro) {
       for (let j in info.puntoEncuentro) {
         let punto = info.puntoEncuentro[j];
@@ -122,26 +116,11 @@ const puntosEncuentro = computed(() => {
   return [...territorios.puntoEncuentro, ...otros];
 })
 
-const territoriosInfo = ref({})
-
-
-watch( form.value, async (val) => {
-  // console.log('watch form.value.territorios', val, territorios.data);
-  if (!val.territorios) return
-  for (let i in val.territorios) {
-    let name = form.value.territorios[i];
-    if (territoriosInfo.value[name]?.hasOwnProperty('showMap')) continue
-    territoriosInfo.value[name] = {
-      showMap: false, 
-    }
-  }
-}, { immediate: true })
 
 </script>
 <template>
   <div class="grid p-4 text-left align-content-start w-full">
     <div class="col-12 flex justify-content-between">
-      <!-- {{ territoriosInfo }} -->
       <h2 class="m-0 noprint">Salidas</h2>
       <!-- {{ filters }} -->
       <div class="noprint">
@@ -191,7 +170,7 @@ watch( form.value, async (val) => {
           <template #body="{ data }">
             <div class="flex flex-column">
 
-              <a :href="'https://www.google.com/maps/search/?api=1&query='+data.puntoEncuentro.latlng.lat+','+data.puntoEncuentro.latlng.lng" target="_blank">{{ data.puntoEncuentro.name }}</a>
+              <a :href="'https://www.google.es/maps?q='+data.puntoEncuentro.latlng.lat+','+data.puntoEncuentro.latlng.lng" target="_blank">{{ data.puntoEncuentro.name }}</a>
               <div class="pt-1" style="font-size: 0.75rem;" v-if="data.notas">{{ data.notas }}</div>
             </div>
             <!-- {{ data.puntoEncuentro }} -->
@@ -199,7 +178,7 @@ watch( form.value, async (val) => {
         </Column>
         <Column field="territorios" header="Territorios" :styles="{ 'min-width': '12rem' }">
           <template #body="{ data }">
-            <a v-for="(item, k) in data.territorios" :key="k" class="ml-2 terr" :href="getItemUrl(territorios.data[item], trabajo.data[item].manzanasPendientes)" target="_blank">{{ item }} </a>
+            <a v-for="(item, k) in data.territorios" :key="k" class="ml-2 terr" :href="getItemUrl(item.item, item.manzanas)" target="_blank">{{ item.territorio }} </a>
             <!-- <i class="pi pi-arrow-circle-right"></i> -->
           </template>
         </Column>
@@ -265,10 +244,63 @@ watch( form.value, async (val) => {
       </div>
       
     </div>
-    
+    <div class="col-12 grid noprint" v-show="showForm">
+
+      <div class="col-12">
+        <div class="pb-2">
+          Territorios:
+        </div>
+        <TerritorioSelector v-model="form.territorios" />
+      </div>
+      <div class="col-3">
+        <div class="pb-2">
+          Territorios: <span class="text-xs cursor-pointer" style="color: blue;"
+            @click="getRecomedaciones()">Actualizar</span>
+        </div>
+        <Listbox v-model="form.territorios" multiple :options="recomendacionTerr" optionLabel="territorio"
+          class="w-full md:w-14rem" listStyle="max-height:250px" >
+          <template #option="slotProps">
+            <div class="flex flex-column align-items-start">
+              <div>{{ slotProps.option.territorio }} | {{ slotProps.option.ref }}</div>
+              <div class="text-xs">Pendiente: {{ slotProps.option.pendiente }} / {{ slotProps.option.total }}</div>
+            </div>
+          </template>
+        </Listbox>
+      </div>
+      <div class="col">
+        
+        <TabView v-if="form.territorios">
+          <TabPanel v-for="(item, k) in form.territorios" :key="k" :header="item.territorio + ' ' + item.ref ">
+            <div class="grid">
+              <div class="col-12">
+                <div  >
+                  <p class="m-0"><span class="font-bold "> Manzanas pendientes: {{ item.pendiente }} de {{ item.total }}</span></p>
+                  <p v-if="item.pendiente < item.total" class="text-sm m-0 ">
+                    {{ item.manzanas.join(', ') }}
+                  </p>
+                </div>
+                <!-- <div class="pb-2">
+                  Seleccionar puntos de encuentro:
+                </div>
+                <div v-for="(punto, pk) in item.item.puntoEncuentro" :key="pk" >
+                  <div class="cursor-pointer font-bold" @click="form.puntoEncuentro = punto">{{ punto.name }}</div>
+                </div> -->
+              </div>
+              <div class="col-12">
+                <Button @click="item.showMap = !item.showMap" class="my-2" label="Mapa" />
+                <MapByName v-if="item.showMap" :zona="item.item.zona" :numero="item.item.numero" />
+              </div>
+              <!-- {{ item }} -->
+            </div>
+          </TabPanel>
+          
+        </TabView>
+      </div>
+    </div>
+
     <div class="col-12 noprint text-primary" v-show="showForm">
       <div class="pb-2 flex" v-if="form.territorios">
-        Territorios: <div v-for="(item, k) in form.territorios" :key="k" class="ml-2">{{ item }}</div>
+        Territorios: <div v-for="(item, k) in form.territorios" :key="k" class="ml-2">{{ item.territorio }}</div>
       </div>
       <!-- <div class="pb-2 flex" v-if="form.puntoEncuentro">
         Punto de encuentro: <div class="ml-2">{{ form.puntoEncuentro.name }}</div>
@@ -280,46 +312,6 @@ watch( form.value, async (val) => {
       </div>
 
     </div>
-    <div class="col-12 grid noprint" v-show="showForm">
-      <div class="col">
-        
-        <TabView v-if="form.territorios">
-          <TabPanel v-for="(item, k) in form.territorios" :key="k" :header="item">
-            <div class="grid">
-              <div class="col-12">
-                <div  >
-                  <p class="m-0"><span class="font-bold "> Manzanas pendientes: {{ trabajo.data[item].manzanasPendientesTotal }} de {{ trabajo.data[item].manzanasTotal }}</span></p>
-                  <p v-if="trabajo.data[item].manzanasPendientesTotal < trabajo.data[item].manzanasTotal" class="text-sm m-0 ">
-                    {{ trabajo.data[item].manzanasPendientes.join(', ') }}
-                  </p>
-                </div>
-                <!-- <div class="pb-2">
-                  Seleccionar puntos de encuentro:
-                </div>
-                <div v-for="(punto, pk) in item.item.puntoEncuentro" :key="pk" >
-                  <div class="cursor-pointer font-bold" @click="form.puntoEncuentro = punto">{{ punto.name }}</div>
-                </div> -->
-              </div>
-              <div class="col-12">
-                <Button @click="territoriosInfo[item].showMap = !territoriosInfo[item].showMap" class="my-2" label="Mapa" />
-                <MapByName v-if="territoriosInfo[item].showMap" :zona="territorios.data[item].zona" :numero="territorios.data[item].numero" />
-              </div>
-              <!-- {{ item }} -->
-            </div>
-          </TabPanel>
-          
-        </TabView>
-      </div>
-      <div class="col-12">
-        <div class="pb-2">
-          <h4 class="m-0 pt-6">Seleccionar Territorio</h4>
-        </div>
-        <TerritorioSelector v-model="form.territorios" />
-      </div>
-      
-      
-    </div>
-
 
     <div class="col-12 noprint" v-show="showForm">  
       <Divider />

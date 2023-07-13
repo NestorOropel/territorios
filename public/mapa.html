@@ -98,7 +98,15 @@
           sessionStorage.setItem('center', JSON.stringify([center.lat, center.lng]))
         });
       }
-
+      let dataColor = false;
+      try {
+        const color = sessionStorage.getItem('color')
+        // console.log("color", color)
+        dataColor = JSON.parse(color)
+      } catch (error) {
+        
+      }
+      const colors = (dataColor) ? `color: ${dataColor.color}; background: ${dataColor.backgroundColor}; border: ${dataColor.backgroundColor}; ` : '';
       if (Array.isArray(mzNumbers)) {
         for (let i in mzNumbers) {
           if (parseInt(i) === 0) continue;
@@ -106,7 +114,8 @@
           let icon = L.divIcon({
             className: 'manzana-marker ',
             iconSize:null,
-            html:'<div class="icon" style="font-size: 1em">'+nro+'</div><div class="arrow" />'
+            // html:'<div class="icon" style="font-size: 1em">'+nro+'</div><div class="arrow" />'
+            html: `<div class="icon manzana-marker-center" style="font-size: 1em; ${colors}">${nro}</div><div class="arrow" />`
           });
           L.marker(mzNumbers[i][0], { icon }).addTo(map);
         }

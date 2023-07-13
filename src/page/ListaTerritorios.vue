@@ -4,18 +4,11 @@
       <div class="flex justify-content-between w-full align-items-center">
         <h1>Lista de territorios</h1>
         <div class="noprint flex">
-          <!-- <SelectButton v-if="!props.print" v-model="mode" :options="modes" optionLabel="value" optionValue="value"
-            dataKey="value" aria-labelledby="custom">
-            <template #option="slotProps">
-              <i :class="slotProps.option.icon"></i>
-            </template>
-          </SelectButton> -->
-          <ImportTerr class="mx-2" />
-          <Button label="Puntos de Encuentro" @click="route.$patch({ page: 'puntoEncuentro' })"  />
-          <Button icon="pi pi-print" class="ml-2" @click="print" />
+          <Button label="Puntos de Encuentro" severity="secondary" class="noprint" @click="route.$patch({ page: 'puntoEncuentro' })"  />
+          <Button icon="pi pi-plus" label="Nuevo"  class="ml-2 noprint" @click="newPlane" />
+          <Button icon="pi pi-print"  class="ml-2 noprint" @click="print" />
         </div>
       </div>
-
     </div>
     <div class="card">
       <DataTable :value="territorios.list" :paginator="false" class="p-datatable-customers" showGridlines :rows="30"
@@ -44,15 +37,20 @@
           <template #body="{ data }">{{ data.notas }}</template>
         </Column>
         <Column  class="text-right" :styles="{ 'min-width': '12rem' }">
-          <template #body="{ data }">
-            <a :href="getItemUrl(data)" target="_blank" class="btn btn-sm btn-secondary"><Button label="Ver" icon="pi pi-eye" outlined  /></a>
-            <Button label="Editar" class="noprint ml-2"  @click="edit(data)" />
+          <template #body="{ data }" >
+            <div class="flex">
+              <Button icon="pi pi-history"  severity="success" title="Ver y actualizar trabajo" class="noprint mr-2" outlined  @click="terrWork(data)" />
+              <a :href="getItemUrl(data)" target="_blank" class="btn btn-sm btn-secondary"><Button label="Ver" icon="pi pi-eye" outlined  /></a>
+              <Button icon="pi pi-pencil" outlined class="noprint ml-2"  @click="edit(data)" />
+            </div>
           </template>
         </Column>
 
       </DataTable>
     </div>
-
+    <div class="text-left noprint py-5">
+      <ImportTerr  />
+    </div>
   </div>
 </template>
 
@@ -70,6 +68,11 @@ const territorios = useTerritoriosStore();
 const territorio = useTerritorioStore();
 const route = useRouterStore();
 const { getItemUrl } = useUrl();
+
+const newPlane = () => {
+  territorio.$reset();
+  route.$patch({page: 'formTerritorio'})
+}
 
 
 const filters1 = ref({ global: { value: '' } })
@@ -94,6 +97,11 @@ const modes = ref([
 const edit = (item) => {
   territorio.$patch(item)
   route.$patch({ page: 'formTerritorio' })
+}
+
+const terrWork = (item) => {
+  territorio.$patch(item)
+  route.$patch({ page: 'tarjetaTerritorio' })
 }
 
 const loadIframe = () => {

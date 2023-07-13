@@ -14,14 +14,44 @@
     <div class="flex flex-column justify-content-between align-content-between h-full">
       <div class="flex flex-column buttonspace">
         <!-- <Button icon="pi pi-th-large" @click="visibleLeft = true" /> -->
-        <Button icon="pi pi-plus" title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="newPlane" />
-        <Button icon="pi pi-list" title="Listar territorios" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})" />
-        <Button icon="pi pi-map" title="Mapa de territorio" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'mapaTerritorios'})" />
-        <Button icon="pi pi-chart-line" title="Estadisticas" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'estadisticas'})" />
-        <Button icon="pi pi-briefcase" title="Salidas" class="p-button-outlined p-button-secondary" @click="route.$patch({page: 'salidas'})" />
+        <!-- <Button title="Agregar nuevo territorio" class="p-button-outlined p-button-secondary" @click="newPlane">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-plus pb-2"></i>
+            <span class="text-xs">Nuevo</span>
+          </div>
+        </Button> -->
+        <Button title="Listar territorios" class="p-button-secondary" @click="route.$patch({page: 'listaTerritorio'})">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-list pb-2"></i>
+            <span class="text-xs">Territorios</span>
+          </div>
+        </Button>
+        <Button title="Salidas" class="p-button-secondary" @click="route.$patch({page: 'salidas'})">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-briefcase pb-2"></i>
+            <span class="text-xs">Salidas</span>
+          </div>
+        </Button>
+        <Button title="Mapa de territorio" class="p-button-secondary" @click="route.$patch({page: 'mapaTerritorios'})">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-map pb-2"></i>
+            <span class="text-xs">Mapa</span>
+          </div>
+        </Button>
+        <Button title="Estadisticas" class="p-button-secondary" @click="route.$patch({page: 'estadisticas'})">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-chart-line pb-2"></i>
+            <span class="text-xs">Estadisticas</span>
+          </div>
+        </Button>
       </div>
       <div class="flex flex-column buttonspace">
-        <Button icon="pi pi-cog" class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})" />
+        <Button class="p-button-warning" title="Descargar archivo con los cambios" @click="route.$patch({page: 'downloadTerritorio'})">
+          <div class="flex flex-column text-center w-full">
+            <i class="pi pi-cog pb-2"></i>
+            <span class="text-xs">Configuración</span>
+          </div>
+        </Button>
         <!-- <Button icon="pi pi-power-off" class="p-button-outlined p-button-secondary" title="Inicio" @click="route.$patch({page: 'start'})" /> -->
       </div>
     </div>
@@ -33,20 +63,17 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouterStore } from '@/store/router'
-import { useTerritorioStore } from "@/store/territorio";
-const terr = useTerritorioStore();
+
+
 const route = useRouterStore()
 const visibleLeft = ref(false)
-const options = ref([
-  {
-    name: "Nuevo territorio"
-  }
-])
+// const options = ref([
+//   {
+//     name: "Nuevo territorio"
+//   }
+// ])
 
-const newPlane = () => {
-  terr.$reset();
-  route.$patch({page: 'formTerritorio'})
-}
+
 
 </script>
 
@@ -56,8 +83,16 @@ const newPlane = () => {
   width: 100%;
 }
 .menu {
+  background: #f7f7f7;
   padding: 10px;
   border-right: 2px solid black;
+
+}
+
+.menu .p-button, .menu .p-button-secondary {
+  background: white;
+  color: black;
+  padding: 1rem .25rem;
 }
 .buttonspace button {
   margin-bottom: 10px;

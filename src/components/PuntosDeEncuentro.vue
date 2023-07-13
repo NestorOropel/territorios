@@ -21,8 +21,9 @@ const click = (e) => {
 }
 
 const save = () => {
+  const val = JSON.parse(JSON.stringify( form.value))
   territorios.$patch({
-    puntoEncuentro: [...territorios.puntoEncuentro, form.value]
+    puntoEncuentro: [...territorios.puntoEncuentro, val]
   })
   visible.value = false;
 }

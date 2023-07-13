@@ -1,9 +1,17 @@
 <template>
-  <div class="p-8 surface-ground ">
+  <ConfirmDialog></ConfirmDialog>
+  <div class="px-8 py-4 surface-ground ">
     <!-- The `multiple` attribute lets users select multiple files. -->
     <div class="grid w-full h-full ">
 
       <div class="col bg-white  p-8 text-left line-height-3">
+        <!-- <h3 class="mb-0 mt-0 font-light">Abrir</h3> -->
+        <p class="mt-1">
+          Para abrir o crear un nuevo archivo ve a la pagina de inicio. Ten en cuenta siempre guardar los cambios antes de abrir un nuevo archivo.
+        </p>
+        <div>
+          <Button label="Pagina de Inicio" class="p-button-success" icon="pi pi-home" @click="confirm1('start')" />
+        </div>
         <h1 class="font-light">Guardar datos</h1>
 
         <div>
@@ -23,8 +31,9 @@
           la pantalla, para eliminarlos toca el boton eliminar. Te recomendamos descargar una copia de los datos antes de
           hacerlo presionando el boton Guardar.</p>
         <div>
-          <Button label="Eliminar" class="p-button-danger" icon="pi pi-save" @click="clear" />
+          <Button label="Eliminar" class="p-button-danger" icon="pi pi-save" @click="confirm1('clear')" />
         </div>
+        
       </div>
     </div>
   </div>
@@ -36,15 +45,45 @@ import { useSalidaStore } from "@/store/useSalidaStore";
 import { useTrabajoStore } from "@/store/useTrabajoStore";
 import { useMapStore } from '@/store/map'
 import { useRouterStore } from '@/store/router'
+import ConfirmDialog from 'primevue/confirmdialog';
+import { useConfirm } from "primevue/useconfirm";
 
+const confirm = useConfirm();
 const territorios = useTerritoriosStore()
 const trabajo = useTrabajoStore()
 const salida = useSalidaStore();
 const route = useRouterStore()
 
 const m = useMapStore()
+const confirm1 = (type) => {
+    confirm.require({
+        message: 'Se perderan los cambios que no haya guardado y descargado, ¿Deseas guardar y descargar los datos?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: async () => {
+          await downloadFile();
+          op_execute(type);
+        },
+        reject: () => {
+          op_execute(type);
+        }
+    });
+};
 
-const downloadFile = () => {
+const op_execute = (type) => {
+  if(type == 'start')
+  {
+    toStart();
+  } else if (type == 'clear')
+  {
+    clear();
+  }
+}
+const toStart = () => {
+  route.$patch({ page: 'start' });
+}
+
+const downloadFile = () => new Promise((resolve, reject) => {
   //create or obtain the file's content
   let data = {
     version: 1,
@@ -75,11 +114,14 @@ const downloadFile = () => {
   a.download = file.name;
   a.click();
   window.URL.revokeObjectURL(url);
-}
+  setTimeout(() => {
+    return resolve();
+  }, 1000);
+})
 
 const clear = () => {
   localStorage.clear()
-  route.$patch({ page: 'start' });
+  window.location.reload();
 }
 </script>
 

@@ -8,7 +8,7 @@
         <div class="menu noprint" v-if="route.page != 'map_viewer'">
           <Menu  />
         </div>
-        <div class="flex-1 flex">
+        <div class="flex-1 flex pageall">
           <EditorTarjeta v-if="route.page == 'formTerritorio'" />
           <DownloadTerritorio v-if="route.page == 'downloadTerritorio'" />
           <ListaTerritorios v-if="route.page == 'listaTerritorio'" />
@@ -17,6 +17,7 @@
           <PuntoEncuentro v-if="route.page == 'puntoEncuentro'" />
           <RegistroTrabajado v-if="route.page == 'registroTrabajado'" />
           <FormSalidas v-if="route.page == 'salidas'" />
+          <TarjetaTerritorio v-if="route.page == 'tarjetaTerritorio'" />
           
           <MapaViewer v-if="route.page == 'map_viewer'" />
         </div>
@@ -32,6 +33,7 @@ import RegistroTrabajado from '@/page/RegistroTrabajado.vue'
 import EstadisticasTerritorio from '@/page/EstadisticasTerritorio.vue'
 import FormSalidas from '@/page/FormSalidas.vue'
 import PuntoEncuentro from './page/PuntoEncuentro.vue'
+import TarjetaTerritorio from './page/TarjetaTerritorio.vue'
 
 const route = useRouterStore()
 
@@ -59,11 +61,25 @@ body {
   height: 100vh;
   flex: none;
   display: flex;
+  /* position: fixed; */
+}
+
+.pageall {
+  height: 100vh;
+  overflow: auto;
+  /* position: fixed; */
 }
 
 @media print {
     /* Aquí irían tus reglas CSS específicas para imprimir */
     .noprint {
+      display: none !important;
+    }
+    .pageall {
+      height: auto !important;
+      overflow: visible !important;
+    }
+    .p-paginator-bottom, .p-column-filter {
       display: none !important;
     }
 

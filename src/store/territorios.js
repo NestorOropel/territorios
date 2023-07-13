@@ -68,13 +68,31 @@ export const useTerritoriosStore = defineStore('territorios', () => {
     })
   }
 
+  const data = computed(() => {
+    let obj = {}
+    list.value.forEach(item => {
+      obj[`${item.zona}${item.numero}`.toUpperCase()] = item
+    })
+    return obj
+  })
+
+  const getTerritorioById = (id) => {
+    // console.log("getTerritorio", zona, numero, list.value)
+    return list.value.find(item => {
+      // console.log("getTerritorio", item)
+      return id.toLowerCase() === `${item.zona}${item.numero}`.toLowerCase();
+    })
+  }
+
   return {
     list,
+    data,
     puntoEncuentro,
     addTerritorio,
     update,
     getTerritorio,
-    state
+    state,
+    getTerritorioById
   }
 },
 { 

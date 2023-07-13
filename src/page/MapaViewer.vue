@@ -29,6 +29,8 @@
     window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(msg), "_blank")
     
   }
+  // console.log("color", item.value.color)
+  sessionStorage.setItem("color", JSON.stringify(item.value.color))
 </script>
 
 <template>
@@ -46,17 +48,31 @@
       <iframe :src="'/mapa.html?center='+item.center+'&zoom='+item.zoom+'&limits='+JSON.stringify(item.limits)+'&mzNumbers='+JSON.stringify(item.mzNumbers)" frameborder="0" id="map-iframe"></iframe>
     </div>
     <div class="col-12 lg:col-6 px-4 pb-6">
+      
+      <div v-if="item.pendiente">
+        <h3 class="py-0 mb-1">Manzanas a trabajar</h3>
+        <div>
+          {{ item.pendiente.join(", ") }}
+        </div>
+      </div>
       <h3 class="py-0 mb-1">
         Informar manzanas trabajadas
       </h3>
       <div class="pb-3">
         Seleccione las manzanas que han sido trabajadas
       </div>
-      <div class="grid grid-nogutter">
+      <div class="grid grid-nogutter" v-if="item.pendiente">
+        <div v-for="(check, k) in worked" :key="k"  class="mr-2 mb-2">
+          <ToggleButton  v-model="worked[k]" :disabled="!item.pendiente.includes(parseInt(k))" :class="{ 'bg-red-600 text-white': !item.pendiente.includes(parseInt(k)) }" :onLabel="k" :offLabel="k" />
+        </div>
+      </div>
+
+      <div class="grid grid-nogutter" v-if="!item.pendiente">
         <div v-for="(check, k) in worked" :key="k"  class="mr-2 mb-2">
           <ToggleButton  v-model="worked[k]" :onLabel="k" :offLabel="k" />
         </div>
       </div>
+      
 
       <div class="pt-2">
         <Button label="Enviar Mensaje" severity="success" class="p-button-success" @click="sendWhatsapp" />
@@ -78,7 +94,7 @@
  }
  #map-iframe {
    width: 99%;
-   height: 80vh;
+   height: 70vh;
    margin-left: .5%;
  }
 </style>
