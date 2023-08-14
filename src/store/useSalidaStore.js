@@ -19,6 +19,7 @@ export const useSalidaStore = defineStore('salida', () => {
     list.value.data.push(form)
   }
 
+  console.log("useSalidaStore", list.value)
   return {
     horarios,
     conductores,

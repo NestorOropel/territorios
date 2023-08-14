@@ -13,6 +13,7 @@ export const useTrabajoStore = defineStore('trabajo', () => {
     const result =
     {
       history: [],
+      vecesCompletado: 0,
       manzanas: [],
       manzanasTotal: 0,
       manzanasPendientes: [],
@@ -50,10 +51,10 @@ export const useTrabajoStore = defineStore('trabajo', () => {
 
   var detail = null;
 
-  const getTerritorio = async ({ territorio, date, conductor }) => {
+  const getTerritorio = async ({ territorio }) => {
     // console.log("getTerritorio", territorio, date, conductor)
     detail = data.value[territorio.toUpperCase()]
-    console.log("getTerritorio detail 0010", detail)
+    // console.log("getTerritorio detail 0010", detail)
 
 
 
@@ -61,7 +62,7 @@ export const useTrabajoStore = defineStore('trabajo', () => {
 
       // console.log("detail no")
       detail = await template(territorio)
-      console.log("getTerritorio detail 22", detail)
+      // console.log("getTerritorio detail 22", detail)
       // await addDetalle({date, conductor})
     }
     // console.log("getTerritorio detail", detail)
@@ -69,22 +70,33 @@ export const useTrabajoStore = defineStore('trabajo', () => {
   }
 
   const addDetalle = async ({ date, conductor }) => {
-    // console.log("addDEtail")
-    if (
-      // detail.history.length > 0 && 
-      detail.active !== false
-    ) return
-    // console.log("addDEtail2222")
+    // si hay un detalle activo, no se puede iniciar otro
+    // console.log("addDetalle", detail.active)
+    if ( detail.active !== false) return
+    // platilla de history
     let tHistory = await templateHistory(date, conductor)
+    
+    // // si no detalles, se crea uno
+    // if (detail.history.length === 0) {
+    //   detail.history.push(tHistory)
+    //   detail.ultimoInicio = date
+    //   detail.active = 0;
+    //   return;
+    // }
+    // si hay no hay detalle activo, se crea uno
     detail.history.push(tHistory)
     detail.ultimoInicio = date
     detail.active = detail.history.length - 1;
   }
 
-  const updateHistory = async (params) => {
+  const updateHistory = async (params, indexs=false) => {
     const { date, conductor, time, notas, manzanas } = params
-    // console.log("updateHistory", detail)
-    let hDetail = detail.history[detail.active];
+    if (indexs === null ) indexs = false
+    // console.log("updateHistory", indexs, typeof indexs, detail)
+    const active = indexs === false ? detail.active:  indexs?.history
+    // cono
+    let hDetail = detail.history[active];
+    // console.log("updateHistory hDetail", active, hDetail)
     let newDoc = {
       fecha: date,
       manzanas,
@@ -92,38 +104,95 @@ export const useTrabajoStore = defineStore('trabajo', () => {
       conductor,
       notas: ""
     }
-    hDetail.detalle.push(newDoc);
-
-    let newPendiente = []
-    for (let i in detail.manzanasPendientes) {
-      let mzna = detail.manzanasPendientes[i]
-      if (!manzanas.includes(mzna) && !manzanas.includes(mzna.toString())) {
-        newPendiente.push(mzna)
-      }
+    // console.log("updateHistory newDoc", active,  hDetail)
+    if (indexs === false) {
+      hDetail.detalle.push(newDoc);
+    } else {
+      hDetail.detalle[indexs?.detail] = newDoc
     }
-
-    if (newPendiente.length === 0) {
-      hDetail.fin = date
-      detail.ultimoFin = date
-      newPendiente = { ...detail.manzanas }
-    }
-    detail.manzanasPendientes = newPendiente
-    detail.manzanasPendientesTotal = newPendiente.length
-    detail.active === false
     return;
   }
 
-  const setHistory = async (params) => {
-    // console.log("setHistory detail", detail)
-    await addDetalle(params)
-    await updateHistory(params)
+  const removeDetail = async (territorio, indexHistory, indexDetail) => {
+    await getTerritorio({territorio})
+    // console.log("removeDetail", detail, indexHistory, indexDetail)
+    detail.history[indexHistory].detalle.splice(indexDetail, 1)
+    await updateStats()
   }
 
+  const updateStats = async () => {
+    let vecesCompletado = 0;
+    let manzanasPendientes = [...detail.manzanas]
+    
+    let ultimoInicio = null;
+    let ultimoFin = null;
+    let activo = false;
 
-  const setRegistro = async (params) => {
+    // itera sobre los detalles de todos los historicos y actualiza los stats
+    for (let i in detail.history) {
+      // console.log("updateStats detail.history", i, detail.history[i])
+      for (let j in detail.history[i].detalle) {
+        let item = detail.history[i].detalle[j]
+        if (j == 0) {
+          ultimoInicio = item.fecha
+        }
+        if (typeof item.manzanas === "object" && !Array.isArray(item.manzanas)) item.manzanas = Object.values(item.manzanas)
+        let newPendiente = []
+        for (let k in manzanasPendientes) {
+          let mzna = manzanasPendientes[k]
+          if (!item.manzanas.includes(mzna) && !item.manzanas.includes(mzna.toString())) {
+            newPendiente.push(mzna)
+          }
+        }
+        manzanasPendientes = [...newPendiente]
+        // console.log("manzanasPendientes", item.manzanas, manzanasPendientes)
+        // console.log("manzanasPendientes", j, detail.history[i].detalle.length - 1, detail.history[i].detalle)
+        if (j == detail.history[i].detalle.length - 1) {
+          // console.log("newPendiente.length",  newPendiente.length, newPendiente)
+          if (newPendiente.length === 0) {
+            detail.history[i].fin = item.fecha
+            ultimoFin = item.fecha
+            vecesCompletado++
+            manzanasPendientes = [...detail.manzanas]
+            activo = false
+          } else {
+            ultimoFin = null
+            activo = i
+          }
+        }
+      }
+      // console.log("manzanasPendientes", manzanasPendientes)
+      // if (manzanasPendientes.length > 0) {
+      //   activo = i
+      // } else {
+      //   activo = false
+      // }
+    }
+    let manzanasPendientesTotal = manzanasPendientes.length
+    // console.log("updateStats", vecesCompletado, manzanasPendientes, manzanasPendientesTotal, ultimoInicio, ultimoFin, activo)
+    detail.vecesCompletado = vecesCompletado
+    detail.manzanasPendientes = manzanasPendientes
+    detail.manzanasPendientesTotal = manzanasPendientesTotal
+    detail.ultimoInicio = ultimoInicio
+    detail.ultimoFin = ultimoFin
+    detail.active = activo
+  }
+
+  const setHistory = async (params, indexs=false) => {
+    
+    await updateStats()
+    // console.log("setHistory detail", detail)
+
+    if (!indexs) await addDetalle(params)
+    await updateHistory(params, indexs)
+    await updateStats()
+  }
+
+  const setRegistro = async (params, indexs) => {
     // console.log("setRegistro", params)
     await getTerritorio(params);
-    await setHistory(params)
+    // console.log("setRegistro detail", detail)
+    await setHistory(params, indexs)
     data.value[params.territorio.toUpperCase()] = JSON.parse(JSON.stringify(detail))
     return
   }
@@ -241,7 +310,8 @@ export const useTrabajoStore = defineStore('trabajo', () => {
     iniciados,
     getIniciados,
     todos,
-    setTodos
+    setTodos,
+    removeDetail,
   }
 },
   {

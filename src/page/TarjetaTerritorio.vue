@@ -42,7 +42,7 @@ const register = async () => {
     date: date.value.getTime(),
     conductor: conductor.value,
   }
-  await trabajo.setRegistro(params)
+  await trabajo.setRegistro(params, editIndex.value)
   // history.value = trabajo.getTerritorioStats(`${terr.zona}${terr.numero}`);
   showNew.value = false;
 }
@@ -50,6 +50,35 @@ const register = async () => {
 const date = ref(new Date());
 const conductor = ref()
 const showNew = ref(false);
+const editIndex = ref(null);
+const newRegister = () => {
+  showNew.value = true;
+  editIndex.value = null;
+  date.value = new Date();
+  conductor.value = null;
+  worked.value = mzNumbers();
+}
+
+const edit = (indexHistory, indexDetail) => {
+  console.log("index", indexHistory, doc.value.history)
+  const item = doc.value.history[indexHistory]
+  const detail = item.detalle[indexDetail]
+  console.log("edit", item)
+  editIndex.value = {history: indexHistory,  detail: indexDetail};
+  showNew.value = true;
+  date.value = new Date(item.inicio);
+  conductor.value = item.conductor;
+
+  worked.value = mzNumbers();
+  for (let i in worked.value) {
+    if (detail.manzanas.includes(i)) {
+      worked.value[i] = true
+    }
+  };
+
+
+
+}
 
 const selectAllOption = ref(0)
 const selectAll = () => {
@@ -90,7 +119,20 @@ const selectAll = () => {
 }
 
 const doc = computed({
-  get: () => trabajo.data[`${terr.zona}${terr.numero}`.toUpperCase()] || {}
+  get: () => {
+    const datos = JSON.parse(JSON.stringify(trabajo.data[`${terr.zona}${terr.numero}`.toUpperCase()]))
+    // console.log("datos", datos)
+    if (typeof datos.manzanasPendientes === "object" && !Array.isArray(datos.manzanasPendientes)) datos.manzanasPendientes = Object.values(datos.manzanasPendientes)
+    // order history desc by inicio
+    if (datos.history) {
+      datos.history.sort((a, b) => {
+        if (a.inicio > b.inicio) return -1
+        if (a.inicio < b.inicio) return 1
+        return 0
+      })
+    }
+    return datos || {}
+  }
 })
 
 const ultimoTrabajo = computed({
@@ -99,7 +141,7 @@ const ultimoTrabajo = computed({
     return new Date(doc.value.ultimoFin)
   },
   set: (val) => {
-    console.log("val", val)
+    // console.log("val", val)
     
     trabajo.data[`${terr.zona}${terr.numero}`.toUpperCase()].ultimoFin = val.getTime()
   }
@@ -118,8 +160,9 @@ const ultimoTrabajo = computed({
           <h3>Detalle</h3>
           <p  class="pb-2">Ultima vez iniciado: <span>{{ doc?.ultimoInicio ? trabajo.getDate(doc?.ultimoInicio) : "-"}}</span></p>
           <p>Ultima vez completado: <span>{{ doc?.ultimoFin ? trabajo.getDate(doc?.ultimoFin) : "-"}}</span></p>
-          <Calendar v-model="ultimoTrabajo" placeholder="Ultima vez trabajado" class="my-3" showIcon dateFormat="dd/mm/yy" />
-          <p>Manzanas Pendientes: <span>{{ doc.manzanasPendientes.join(", ") }}</span></p>
+          <!-- <Calendar v-model="ultimoTrabajo" placeholder="Ultima vez trabajado" class="my-3" showIcon dateFormat="dd/mm/yy" /> -->
+          <p class="text-sm">Manzanas Pendientes: <span>{{ doc.manzanasPendientes.join(", ") }}</span></p>
+          <p class="text-xs mt-2">Veces completado: <span>{{ doc.vecesCompletado }}</span></p>
         </div>
       </div>
       <div v-if="showNew">
@@ -155,7 +198,7 @@ const ultimoTrabajo = computed({
         <div class="flex justify-content-between mt-2">
           <h3 class="mt-1">Historial</h3>
           <div>
-            <Button icon="pi pi-plus" size="small" text  @click="showNew = true" />
+            <Button icon="pi pi-plus" size="small" text  @click="newRegister()" />
           </div>
         </div>
         <!-- {{ history }} -->
@@ -163,7 +206,7 @@ const ultimoTrabajo = computed({
         <!-- {{trabajo.data[`${terr.zona}${terr.numero}`.toUpperCase()]}} -->
         <div class="table">
           <div v-for="(item, k) in doc.history" :key="k" class="" >
-            <div class="col-fixed text-base px-3">
+            <div class="col-fixed text-base pr-3 m-0 pl-0">
               <h5 class="m-0">Inicio</h5>
               <div> {{trabajo.getDate(item.inicio)}}</div>
 
@@ -176,12 +219,18 @@ const ultimoTrabajo = computed({
 
               <h5 class="m-0 mt-2">Conductor</h5>
               <div> {{item.conductor}}</div>
+              
             </div>
             <div class="col px-3">
               <!-- {{item}} -->
               <div v-for="(detail, index) in item.detalle" :key="index" class="w-full mb-2">
                 <div class="text-xs">{{ trabajo.getDate(detail.fecha) }} - {{ detail.conductor }}</div>
                 <div class="py-2">{{ detail.manzanas.join(", ") }}</div>
+                <div>
+
+                  <Button icon="pi pi-pencil" size="small" text  @click="edit(k, index)" />
+                  <Button icon="pi pi-trash" size="small" text  @click="trabajo.removeDetail(`${terr.zona}${terr.numero}`, k, index)" />
+                </div>
               </div>  
             </div>
           </div>

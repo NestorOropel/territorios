@@ -12,6 +12,7 @@
     "chart.js": "^4.3.0",
     "core-js": "^3.30.2",
     "leaflet": "^1.9.3",
+    "leaflet-gesture-handling": "^1.2.2",
     "lodash.clonedeep": "^4.5.0",
     "pinia": "^2.0.35",
     "pinia-cache": "^1.0.0",

@@ -15,9 +15,12 @@
         <div class="mt-5">
           <h3 class="mt-0 font-light">¿Aún no tienes tu archivo .territorio?</h3>
           <p>Solo tienes que hacer clic en 'Nuevo'. Cuando hayas terminado, no olvides descargar la última versión.</p>
-          <Button label="Nuevo"  class="p-button-success" icon="pi pi-file" @click="newDoc" />
+          <div class="mt-2">
+            <Button label="Nuevo"  class="p-button-success" icon="pi pi-file" @click="newDoc" />
+          </div>
         </div>
-
+        
+        <Button v-if="territorios.list?.length > 0" label="Volver a la Home" class="p-button-secondary mt-4" icon="pi pi-home" @click="route.$patch({page: 'listaTerritorio'})" />
 
         
       </div>

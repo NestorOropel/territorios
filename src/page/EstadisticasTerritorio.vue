@@ -78,6 +78,38 @@ const generar = () => {
           informe.push({});
         }
       }
+      // verificar los informes para ver la fecha de fin por bug al cargar datos.
+      for (let k = 0; k < informe.length; k++) {
+        
+        if (!typeof informe[k].fin != 'integer' && informe[k].detalle) {
+          // ver si se predicaron todas las manzanas
+          const manzanas = trabajo.data[i].manzanas;
+          console.log("informe[k].detalle>>", manzanas, informe[k]);
+
+
+
+          const manzanasPredicadas = informe[k].detalle.reduce((a, b) => a = [...a, ...b.manzanas], []);
+          console.log("manzanasPredicadas>>", manzanasPredicadas);
+          // elimina duplicados de manzanasPredicadas
+          const manzanasPredicadasUnicas = [...new Set(manzanasPredicadas)];
+          console.log("manzanasPredicadasUnicas>>", manzanasPredicadasUnicas);
+
+          
+          console.log("manzanas.length>>", manzanas.length, manzanasPredicadasUnicas.length);
+          if (manzanas.length == manzanasPredicadasUnicas.length) {
+            const lastFecha = informe[k].detalle.reduce((a, b) => {
+              if (a > b.fecha) {
+                return a;
+              }
+              return b.fecha;
+            }, 0);
+            console.log("lastFecha>>", lastFecha);
+            informe[k].fin = lastFecha;
+          }
+          
+        }
+      }
+      console.log("informe>>", i, trabajo.data[i], informe);
       page[j].push({ ...trabajo.data[i], informe });
     }
   }

@@ -50,7 +50,7 @@
         new URLSearchParams(window.location.search)
       )
 
-      let { center, limits, zoom, listen, mzNumbers, puntoEncuentro, showLimits } = params;
+      let { center, limits, zoom, listen, mzNumbers, puntoEncuentro, showLimits, you } = params;
       center = JSON.parse('['+center+']');
       console.log("MAP params", params)
 
@@ -142,6 +142,15 @@
         }
         puntoEncuentroMap = L.layerGroup(list).addTo(map);
         
+        if (you) {
+          L.marker(center, { icon: 
+            L.icon({
+              iconUrl: `p2.png`,
+              iconSize: [32, 32],
+              alt: 'Tu ubicación'
+            })
+          }).addTo(map);
+        }
       }
       renderPuntoEncuentro()
     </script>

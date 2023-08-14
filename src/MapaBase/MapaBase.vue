@@ -30,7 +30,14 @@ const center = computed({
 const emit = defineEmits(['mapClick', 'mapMoveend', 'mapMoveend', 'zoomstart', 'zoomend', 'ready'])
 
 onMounted(() =>{
-  let service = m.L.map("mapContainer").setView(center.value, 17)
+  
+  let service = m.L.map("mapContainer", { 
+    center:center.value, 
+    zoom:17,
+    gestureHandling: true,
+  })
+
+  // m.map.gestureHandling.enable()
   m.setMap(service);
   m.L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution:

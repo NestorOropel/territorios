@@ -4,12 +4,16 @@ import { defineStore } from 'pinia'
 import * as Lvue from "leaflet";
 import * as fIcons from './mix/iconsNumbers'
 import * as LIcons from './mix/iconsLetters'
+
+import { GestureHandling } from "leaflet-gesture-handling";
+import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 // import L from "@/libraries/leaflet.snogylop.js";
 
 export const useMapStore = defineStore('mapa', () => {
   const map = ref(null)
   const center = ref([-31.5653073, -68.5638051])
   
+  L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
   var sectorOption = ref({
     color: 'red',
